@@ -34,7 +34,7 @@ function ArtworkVisual({
   );
 }
 
-function WorkCard({
+function GalleryItem({
   work,
   index,
 }: {
@@ -42,154 +42,127 @@ function WorkCard({
   index: number;
 }) {
   return (
-    <article className={`work-card work-card--${index + 1}`}>
-      <div className="work-card__topline">
-        <span>{work.medium}</span>
-        <span>{work.year}</span>
-      </div>
-      <div className="work-card__visual">
+    <figure className={`gallery-item gallery-item--${index + 1}`}>
+      <div className="gallery-item__visual">
         <ArtworkVisual
           image={work.image}
           artClass={work.artClass}
           alt={work.alt}
+          eager={index === 0}
         />
-        <span className="work-card__number">
-          {(index + 1).toString().padStart(2, "0")}
-        </span>
       </div>
-      <div className="work-card__caption">
-        <h3>{work.title}</h3>
-        <p>{work.titleZh}</p>
-        <span aria-hidden="true">↗</span>
-      </div>
-    </article>
+      <figcaption>
+        <div>
+          <h2>{work.title}</h2>
+          <p>{work.titleZh}</p>
+        </div>
+        <div className="gallery-item__details">
+          <span>{work.medium}</span>
+          <span>{work.year}</span>
+        </div>
+      </figcaption>
+    </figure>
   );
 }
 
 export default function Home() {
-  const leadWork = works.find((work) => work.featured) ?? works[0];
-
   return (
     <main id="top">
-      <header className="site-header">
-        <div className="topline">
-          <span>INDEPENDENT ILLUSTRATION PRACTICE</span>
-          <span>AVAILABLE FOR COMMISSIONS</span>
-          <span>{portfolio.year} / ISSUE 01</span>
-        </div>
+      <header className="minimal-header">
+        <a className="minimal-header__name" href="#top" aria-label="回到首页">
+          {portfolio.name}
+        </a>
 
-        <div className="masthead">
-          <a className="masthead__name" href="#top" aria-label="回到首页">
-            {portfolio.name}
-          </a>
-          <div className="masthead__edition">
-            <span>ARTIST</span>
-            <strong>ARCHIVE</strong>
-          </div>
-        </div>
+        <nav aria-label="主导航">
+          <a href="#selected">Selected</a>
+          <a href="#archive">Archive</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
 
-        <div className="navigation-row">
-          <nav aria-label="主导航">
-            <a href="#work">WORK</a>
-            <a href="#about">ABOUT</a>
-            <a href="#contact">CONTACT</a>
-          </nav>
-          <a className="navigation-row__email" href={`mailto:${portfolio.email}`}>
-            EMAIL ME ↗
-          </a>
-        </div>
+        <span className="minimal-header__year">{portfolio.year}</span>
       </header>
 
-      <section className="lead-grid" aria-labelledby="page-title">
-        <div className="lead-copy">
-          <p className="section-kicker">FEATURED / INTRODUCTION</p>
+      <section className="intro-section" aria-labelledby="page-title">
+        <p className="intro-section__eyebrow">{portfolio.eyebrow}</p>
+        <div className="intro-section__copy">
           <h1 id="page-title">{portfolio.headline}</h1>
-          <p className="lead-copy__intro">{portfolio.intro}</p>
-          <div className="lead-copy__actions">
-            <a className="button button--dark" href="#work">
-              VIEW THE WORK
-            </a>
-            <a className="text-link" href="#about">
-              ARTIST PROFILE <span aria-hidden="true">↓</span>
-            </a>
-          </div>
+          <p>{portfolio.intro}</p>
         </div>
-
-        <article className="lead-story">
-          <div className="lead-story__flag">NEW / SELECTED WORK</div>
-          <div className="lead-story__visual">
-            <ArtworkVisual
-              image={leadWork.image}
-              artClass={leadWork.artClass}
-              alt={leadWork.alt}
-              eager
-            />
-          </div>
-          <div className="lead-story__caption">
-            <div>
-              <p>{leadWork.medium}</p>
-              <h2>
-                {leadWork.title}
-                <span>{leadWork.titleZh}</span>
-              </h2>
-            </div>
-            <strong>{leadWork.year}</strong>
-          </div>
-        </article>
+        <a href="#selected" aria-label="前往精选作品">
+          View selected works <span aria-hidden="true">↓</span>
+        </a>
       </section>
 
-      <div className="rolling-strip" aria-label="作品集信息">
-        <div className="rolling-strip__track">
-          <span>SELECTED WORKS {portfolio.range}</span>
-          <i aria-hidden="true">●</i>
-          <span>ILLUSTRATION / ART / EDITORIAL</span>
-          <i aria-hidden="true">●</i>
-          <span>A GARDEN OF IMAGINED PLACES</span>
-        </div>
-      </div>
-
-      <section className="work-section" id="work" aria-labelledby="work-title">
-        <div className="section-heading">
-          <p>01 / WORK</p>
-          <h2 id="work-title">Selected Works</h2>
-          <div>
-            <span>{works.length.toString().padStart(2, "0")} PROJECTS</span>
-            <span>{portfolio.range}</span>
-          </div>
+      <section
+        className="selected-section"
+        id="selected"
+        aria-labelledby="selected-title"
+      >
+        <div className="section-bar">
+          <h2 id="selected-title">Selected</h2>
+          <span>{portfolio.range}</span>
+          <span>{works.length.toString().padStart(2, "0")} works</span>
         </div>
 
-        <div className="work-grid">
+        <div className="gallery-grid">
           {works.map((work, index) => (
-            <WorkCard key={work.slug} work={work} index={index} />
+            <GalleryItem key={work.slug} work={work} index={index} />
+          ))}
+        </div>
+      </section>
+
+      <section
+        className="archive-section"
+        id="archive"
+        aria-labelledby="archive-title"
+      >
+        <div className="section-bar">
+          <h2 id="archive-title">Archive</h2>
+          <span>All works</span>
+          <span>Updated {portfolio.year}</span>
+        </div>
+
+        <div className="archive-list">
+          {works.map((work, index) => (
+            <article key={work.slug}>
+              <span>{(index + 1).toString().padStart(2, "0")}</span>
+              <h3>
+                {work.title}
+                <small>{work.titleZh}</small>
+              </h3>
+              <span>{work.medium}</span>
+              <span>{work.year}</span>
+            </article>
           ))}
         </div>
       </section>
 
       <section className="about-section" id="about" aria-labelledby="about-title">
-        <div className="about-section__index">
+        <div className="section-bar section-bar--light">
+          <h2>About</h2>
+          <span>Artist profile</span>
           <span>02</span>
-          <p>ABOUT THE ARTIST</p>
         </div>
 
-        <div className="about-section__statement">
-          <p className="section-kicker">ARTIST STATEMENT</p>
+        <div className="about-layout">
           <h2 id="about-title">{portfolio.aboutTitle}</h2>
-        </div>
 
-        <div className="about-section__body">
-          {portfolio.about.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </div>
+          <div className="about-layout__body">
+            {portfolio.about.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
 
-        <aside className="fact-list" aria-label="艺术家信息">
-          {portfolio.facts.map((fact) => (
-            <div key={fact.label}>
-              <span>{fact.label}</span>
-              <strong>{fact.value}</strong>
-            </div>
-          ))}
-        </aside>
+          <aside className="about-facts" aria-label="艺术家信息">
+            {portfolio.facts.map((fact) => (
+              <div key={fact.label}>
+                <span>{fact.label}</span>
+                <strong>{fact.value}</strong>
+              </div>
+            ))}
+          </aside>
+        </div>
       </section>
 
       <section
@@ -197,22 +170,22 @@ export default function Home() {
         id="contact"
         aria-labelledby="contact-title"
       >
-        <div className="contact-section__label">03 / CONTACT</div>
-        <div className="contact-section__main">
-          <p>HAVE A PROJECT IN MIND?</p>
-          <h2 id="contact-title">{portfolio.contactTitle}</h2>
-          <p>{portfolio.contactText}</p>
-          <a href={`mailto:${portfolio.email}`}>
-            {portfolio.email}
-            <span aria-hidden="true">↗</span>
-          </a>
+        <div>
+          <p>Contact / Commissions</p>
+          <span>{portfolio.year}</span>
         </div>
+        <h2 id="contact-title">{portfolio.contactTitle}</h2>
+        <p>{portfolio.contactText}</p>
+        <a href={`mailto:${portfolio.email}`}>
+          {portfolio.email}
+          <span aria-hidden="true">↗</span>
+        </a>
       </section>
 
       <footer className="site-footer">
         <strong>{portfolio.name}</strong>
         <span>© {portfolio.year} / ALL WORKS RESERVED</span>
-        <a href="#top">BACK TO TOP ↑</a>
+        <a href="#top">Back to top ↑</a>
       </footer>
     </main>
   );
