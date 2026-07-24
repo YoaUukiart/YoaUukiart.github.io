@@ -1,10 +1,10 @@
 /**
  * 主页内容都集中在这里。
- * 把 YOUR NAME、城市、邮箱和简介替换成你的真实信息即可。
+ * 把城市、邮箱和简介替换成你的真实信息即可。
  * 上传作品的方法见项目根目录 ARTWORKS.md。
  */
 export const portfolio = {
-  name: "YOUR NAME / 你的名字",
+  name: "YoaUuki",
   year: "2026",
   range: "2024—2026",
   eyebrow: "ILLUSTRATION ARTIST · BASED IN YOUR CITY",

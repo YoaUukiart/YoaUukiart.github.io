@@ -6,7 +6,7 @@
 
 个人信息和作品数据都在 [`content/portfolio.ts`](content/portfolio.ts)：
 
-- 把 `YOUR NAME / 你的名字` 替换为你的姓名或艺名。
+- 艺术家名称当前设置为 `YoaUuki`。
 - 修改所在城市、邮箱、艺术家简介与合作类型。
 - 按照 [`ARTWORKS.md`](ARTWORKS.md) 上传真实作品。
 
