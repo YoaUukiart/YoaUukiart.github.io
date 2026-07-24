@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     template: "%s — YOUR NAME",
   },
   description:
-    "一个关于植物、梦境与城市碎片的插画作品集。A quiet archive of imagined places.",
+    "独立插画艺术家的精选作品、创作档案与合作信息。An independent illustration archive.",
   openGraph: {
     title: "YOUR NAME / 艺术家",
-    description: "A garden of imagined places.",
+    description: "Selected works from an independent illustration practice.",
     type: "website",
     locale: "zh_CN",
     images: [
@@ -24,14 +24,14 @@ export const metadata: Metadata = {
         url: socialImage,
         width: 1732,
         height: 908,
-        alt: "YOUR NAME / 艺术家 — A garden of imagined places",
+        alt: "YOUR NAME — Artist Archive — Selected Works 2024–2026",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "YOUR NAME / 艺术家",
-    description: "A garden of imagined places.",
+    description: "Selected works from an independent illustration practice.",
     images: [socialImage],
   },
 };
