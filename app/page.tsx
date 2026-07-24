@@ -43,7 +43,11 @@ function GalleryItem({
 }) {
   return (
     <figure className={`gallery-item gallery-item--${index + 1}`}>
-      <div className="gallery-item__visual">
+      <div
+        className={`gallery-item__visual${
+          work.image ? " gallery-item__visual--image" : ""
+        }`}
+      >
         <ArtworkVisual
           image={work.image}
           artClass={work.artClass}
