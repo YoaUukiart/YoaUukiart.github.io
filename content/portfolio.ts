@@ -30,7 +30,7 @@ export const portfolio = {
 export type PortfolioWork = {
   slug: string;
   title: string;
-  titleZh: string;
+  titleZh?: string;
   year: string;
   medium: string;
   alt: string;
@@ -46,8 +46,7 @@ export type PortfolioWork = {
 export const works: PortfolioWork[] = [
   {
     slug: "digital-painting-01",
-    title: "Digital Painting 01",
-    titleZh: "数字绘画 01",
+    title: "Through my blood",
     year: "2026",
     medium: "DIGITAL PAINTING",
     alt: "蓝色背景中，双手、白色百合与绿色枝叶交织",
