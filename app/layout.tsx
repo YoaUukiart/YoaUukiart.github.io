@@ -9,14 +9,15 @@ const socialImage = new URL(`${basePath}/og.png`, baseUrl).toString();
 export const metadata: Metadata = {
   metadataBase: baseUrl,
   title: {
-    default: "YOUR NAME / 艺术家",
-    template: "%s — YOUR NAME",
+    default: "YOUR NAME - Artist",
+    template: "%s - YOUR NAME",
   },
   description:
-    "独立插画艺术家的精选作品、创作档案与合作信息。An independent illustration archive.",
+    "A minimal, image-first archive of selected works from an independent illustration practice.",
   openGraph: {
-    title: "YOUR NAME / 艺术家",
-    description: "Selected works from an independent illustration practice.",
+    title: "YOUR NAME - Selected Works",
+    description:
+      "Selected works, archive notes, artist profile, and contact information.",
     type: "website",
     locale: "zh_CN",
     images: [
@@ -24,14 +25,15 @@ export const metadata: Metadata = {
         url: socialImage,
         width: 1732,
         height: 908,
-        alt: "YOUR NAME — Artist Archive — Selected Works 2024–2026",
+        alt: "YOUR NAME - Selected Works 2024-2026",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "YOUR NAME / 艺术家",
-    description: "Selected works from an independent illustration practice.",
+    title: "YOUR NAME - Selected Works",
+    description:
+      "Selected works from an independent illustration practice.",
     images: [socialImage],
   },
 };
