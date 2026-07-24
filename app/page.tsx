@@ -58,7 +58,7 @@ function GalleryItem({
       <figcaption>
         <div>
           <h2>{work.title}</h2>
-          <p>{work.titleZh}</p>
+          {work.titleZh ? <p>{work.titleZh}</p> : null}
         </div>
         <div className="gallery-item__details">
           <span>{work.medium}</span>
@@ -133,7 +133,7 @@ export default function Home() {
               <span>{(index + 1).toString().padStart(2, "0")}</span>
               <h3>
                 {work.title}
-                <small>{work.titleZh}</small>
+                {work.titleZh ? <small>{work.titleZh}</small> : null}
               </h3>
               <span>{work.medium}</span>
               <span>{work.year}</span>
