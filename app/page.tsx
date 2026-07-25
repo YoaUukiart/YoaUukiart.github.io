@@ -1,73 +1,5 @@
-import { portfolio, works, type PortfolioWork } from "@/content/portfolio";
-
-function ArtworkVisual({
-  image,
-  artClass,
-  alt,
-  eager = false,
-}: {
-  image?: string;
-  artClass: string;
-  alt: string;
-  eager?: boolean;
-}) {
-  if (image) {
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-    return (
-      <img
-        className="artwork-image"
-        src={`${basePath}${image}`}
-        alt={alt}
-        loading={eager ? "eager" : "lazy"}
-      />
-    );
-  }
-
-  return (
-    <div
-      className={`artwork-placeholder art--${artClass}`}
-      role="img"
-      aria-label={`${alt}（示例占位画面）`}
-    >
-      <span className="placeholder-label">IMAGE COMING SOON</span>
-    </div>
-  );
-}
-
-function GalleryItem({
-  work,
-  index,
-}: {
-  work: PortfolioWork;
-  index: number;
-}) {
-  return (
-    <figure className={`gallery-item gallery-item--${index + 1}`}>
-      <div
-        className={`gallery-item__visual${
-          work.image ? " gallery-item__visual--image" : ""
-        }`}
-      >
-        <ArtworkVisual
-          image={work.image}
-          artClass={work.artClass}
-          alt={work.alt}
-          eager={index === 0}
-        />
-      </div>
-      <figcaption>
-        <div>
-          <h2>{work.title}</h2>
-          {work.titleZh ? <p>{work.titleZh}</p> : null}
-        </div>
-        <div className="gallery-item__details">
-          <span>{work.medium}</span>
-          <span>{work.year}</span>
-        </div>
-      </figcaption>
-    </figure>
-  );
-}
+import { ProjectCarousel } from "@/components/project-carousel";
+import { portfolio, untitledProject } from "@/content/portfolio";
 
 export default function Home() {
   return (
@@ -94,7 +26,7 @@ export default function Home() {
           <p>{portfolio.intro}</p>
         </div>
         <a href="#selected" aria-label="前往精选作品">
-          View selected works <span aria-hidden="true">↓</span>
+          View selected project <span aria-hidden="true">↓</span>
         </a>
       </section>
 
@@ -105,15 +37,16 @@ export default function Home() {
       >
         <div className="section-bar">
           <h2 id="selected-title">Selected</h2>
-          <span>{portfolio.range}</span>
-          <span>{works.length.toString().padStart(2, "0")} works</span>
+          <span>{untitledProject.year}</span>
+          <span>01 project</span>
         </div>
 
-        <div className="gallery-grid">
-          {works.map((work, index) => (
-            <GalleryItem key={work.slug} work={work} index={index} />
-          ))}
-        </div>
+        <ProjectCarousel
+          title={untitledProject.title}
+          year={untitledProject.year}
+          medium={untitledProject.medium}
+          works={untitledProject.works}
+        />
       </section>
 
       <section
@@ -123,22 +56,19 @@ export default function Home() {
       >
         <div className="section-bar">
           <h2 id="archive-title">Archive</h2>
-          <span>All works</span>
+          <span>Projects</span>
           <span>Updated {portfolio.year}</span>
         </div>
 
         <div className="archive-list">
-          {works.map((work, index) => (
-            <article key={work.slug}>
-              <span>{(index + 1).toString().padStart(2, "0")}</span>
-              <h3>
-                {work.title}
-                {work.titleZh ? <small>{work.titleZh}</small> : null}
-              </h3>
-              <span>{work.medium}</span>
-              <span>{work.year}</span>
-            </article>
-          ))}
+          <article>
+            <span>01</span>
+            <h3>{untitledProject.title}</h3>
+            <span>
+              {untitledProject.medium} · {untitledProject.works.length} IMAGES
+            </span>
+            <span>{untitledProject.year}</span>
+          </article>
         </div>
       </section>
 
