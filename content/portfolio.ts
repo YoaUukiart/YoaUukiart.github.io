@@ -7,8 +7,8 @@ export const portfolio = {
   name: "YoaUuki",
   year: "2026",
   range: "2024—2026",
-  eyebrow: "ILLUSTRATION ARTIST · BASED IN YOUR CITY",
-  headline: "为日常造一座想象的花园",
+  eyebrow: "ILLUSTRATION ARTIST · BASED IN CHINA",
+  headline: "YoaUuki’s Illustration Collection",
   intro:
     "以植物、梦境与城市碎片为线索，记录那些介于真实与虚构之间的瞬间。",
   aboutTitle: "我把稍纵即逝的感受，变成可以停留的图像。",
@@ -17,7 +17,7 @@ export const portfolio = {
     "我的创作从日常观察出发，在柔软的色彩、植物形态与叙事碎片之间，寻找一种既安静又充满生命力的视觉语言。",
   ],
   facts: [
-    { label: "BASED IN", value: "YOUR CITY" },
+    { label: "BASED IN", value: "CHINA" },
     { label: "WORKING WITH", value: "EDITORIAL · BOOKS · BRAND" },
     { label: "AVAILABLE FOR", value: "COMMISSIONS · COLLABORATIONS" },
   ],
