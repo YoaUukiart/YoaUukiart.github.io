@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { PortfolioWork } from "@/content/portfolio";
 
@@ -26,10 +26,32 @@ export function ProjectCarousel({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const entryScrollYRef = useRef(0);
+  const entryElementRef = useRef<HTMLElement | null>(null);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const overlayOpen = lightboxIndex !== null || infoOpen;
   const projectLabel = projectNumber.toString().padStart(2, "0");
   const projectTitleId = `project-info-title-${projectLabel}`;
+
+  const rememberEntryPosition = useCallback(() => {
+    entryScrollYRef.current = window.scrollY;
+    entryElementRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+  }, []);
+
+  const restoreEntryPosition = useCallback(() => {
+    const scrollY = entryScrollYRef.current;
+    const entryElement = entryElementRef.current;
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: scrollY, left: 0, behavior: "auto" });
+        entryElement?.focus({ preventScroll: true });
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (!overlayOpen) {
@@ -41,9 +63,19 @@ export function ProjectCarousel({
 
     function handleGlobalKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        if (lightboxIndex !== null) {
+          const track = trackRef.current;
+
+          track?.scrollTo({
+            left: track.clientWidth * lightboxIndex,
+            behavior: "auto",
+          });
+        }
+
         setLightboxIndex(null);
         setInfoOpen(false);
         setZoom(1);
+        restoreEntryPosition();
         return;
       }
 
@@ -78,7 +110,7 @@ export function ProjectCarousel({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [lightboxIndex, overlayOpen, works.length]);
+  }, [lightboxIndex, overlayOpen, restoreEntryPosition, works.length]);
 
   function showSlide(index: number) {
     const nextIndex = Math.min(Math.max(index, 0), works.length - 1);
@@ -129,6 +161,7 @@ export function ProjectCarousel({
   }
 
   function openLightbox(index: number) {
+    rememberEntryPosition();
     setLightboxIndex(index);
     setActiveIndex(index);
     setZoom(1);
@@ -141,6 +174,17 @@ export function ProjectCarousel({
 
     setLightboxIndex(null);
     setZoom(1);
+    restoreEntryPosition();
+  }
+
+  function openProjectInfo() {
+    rememberEntryPosition();
+    setInfoOpen(true);
+  }
+
+  function closeProjectInfo() {
+    setInfoOpen(false);
+    restoreEntryPosition();
   }
 
   function moveLightbox(direction: -1 | 1) {
@@ -218,9 +262,6 @@ export function ProjectCarousel({
                       </span>
                     </div>
                   )}
-                  <span className="project-slide__hint">
-                    View full size <span aria-hidden="true">↗</span>
-                  </span>
                 </button>
               </figure>
             ))}
@@ -254,7 +295,7 @@ export function ProjectCarousel({
                 className="project-carousel__title"
                 type="button"
                 aria-haspopup="dialog"
-                onClick={() => setInfoOpen(true)}
+                onClick={openProjectInfo}
               >
                 {title}
                 <span aria-hidden="true">↗</span>
@@ -293,7 +334,16 @@ export function ProjectCarousel({
           aria-label={`${title}, full-screen image ${lightboxIndex + 1}`}
         >
           <header className="artwork-lightbox__header">
-            <div>
+            <button
+              className="artwork-lightbox__back"
+              type="button"
+              aria-label="Back to project"
+              onClick={closeLightbox}
+            >
+              ← Back
+            </button>
+
+            <div className="artwork-lightbox__identity">
               <strong>{title}</strong>
               <span>
                 {(lightboxIndex + 1).toString().padStart(2, "0")} /{" "}
@@ -326,15 +376,6 @@ export function ProjectCarousel({
                 +
               </button>
             </div>
-
-            <button
-              className="artwork-lightbox__close"
-              type="button"
-              aria-label="Close full-screen viewer"
-              onClick={closeLightbox}
-            >
-              Close ×
-            </button>
           </header>
 
           <div
@@ -386,20 +427,21 @@ export function ProjectCarousel({
           aria-labelledby={projectTitleId}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
-              setInfoOpen(false);
+              closeProjectInfo();
             }
           }}
         >
           <article className="project-info__panel">
             <header>
-              <span>YoaUuki / Project {projectLabel}</span>
               <button
+                className="project-info__back"
                 type="button"
-                aria-label="Close project information"
-                onClick={() => setInfoOpen(false)}
+                aria-label="Back to projects"
+                onClick={closeProjectInfo}
               >
-                Close ×
+                ← Back
               </button>
+              <span>YoaUuki / Project {projectLabel}</span>
             </header>
 
             <div className="project-info__layout">
