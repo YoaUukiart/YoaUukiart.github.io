@@ -11,6 +11,7 @@ type ProjectCarouselProps = {
   medium: string;
   description: string;
   works: PortfolioWork[];
+  variant?: "carousel" | "archive";
 };
 
 type LightboxTransition = {
@@ -43,6 +44,7 @@ export function ProjectCarousel({
   medium,
   description,
   works,
+  variant = "carousel",
 }: ProjectCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const carouselAnimationRef = useRef<number | null>(null);
@@ -340,6 +342,12 @@ export function ProjectCarousel({
     restoreEntryPosition();
   }
 
+  function changeZoom(delta: number) {
+    setZoom((current) =>
+      Math.min(Math.max(Number((current + delta).toFixed(1)), 1), 4),
+    );
+  }
+
   function openProjectInfo() {
     rememberEntryPosition();
     setInfoOpen(true);
@@ -545,36 +553,32 @@ export function ProjectCarousel({
 
   return (
     <>
-      <article className="project-carousel">
-        <div
-          className="project-carousel__viewer"
-          role="region"
-          aria-roledescription="carousel"
-          aria-label={`${title}, ${works.length} images`}
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-        >
+      {variant === "archive" ? (
+        <article className="archive-gallery__project">
+          <header className="archive-gallery__project-header">
+            <span>PROJECT {projectLabel}</span>
+            <div>
+              <h3>{title}</h3>
+              <p>
+                {medium} · {year}
+              </p>
+            </div>
+            <span>{works.length} IMAGES</span>
+          </header>
+
           <div
-            ref={trackRef}
-            className="project-carousel__track"
-            onScroll={handleScroll}
-            onPointerDown={cancelCarouselAnimation}
-            onWheel={cancelCarouselAnimation}
+            className="archive-gallery__grid"
+            aria-label={`${title}, ${works.length} archived images`}
           >
             {works.map((work, index) => (
-              <figure
-                className="project-slide"
+              <button
+                className="archive-thumbnail"
                 key={work.slug}
-                aria-label={`${index + 1} of ${works.length}`}
-                aria-hidden={index !== activeIndex}
+                type="button"
+                aria-label={`Open ${title}, image ${index + 1} of ${works.length}`}
+                onClick={() => openLightbox(index)}
               >
-                <button
-                  className="project-slide__open"
-                  type="button"
-                  aria-label={`Open image ${index + 1} in full-screen viewer`}
-                  tabIndex={index === activeIndex ? 0 : -1}
-                  onClick={() => openLightbox(index)}
-                >
+                <div className="archive-thumbnail__image">
                   {work.image ? (
                     <>
                       {/* Original artwork files are shown without recompression. */}
@@ -582,7 +586,7 @@ export function ProjectCarousel({
                       <img
                         src={`${basePath}${work.image}`}
                         alt={work.alt}
-                        loading={index === 0 ? "eager" : "lazy"}
+                        loading="lazy"
                         draggable={false}
                       />
                     </>
@@ -595,69 +599,132 @@ export function ProjectCarousel({
                       </span>
                     </div>
                   )}
-                </button>
-              </figure>
+                </div>
+                <span className="archive-thumbnail__caption">
+                  <span>{(index + 1).toString().padStart(2, "0")}</span>
+                  <span>{work.title}</span>
+                </span>
+              </button>
             ))}
           </div>
-
-          <button
-            className="project-carousel__arrow project-carousel__arrow--previous"
-            type="button"
-            aria-label="Previous image"
-            onClick={() => showSlide(activeIndex - 1)}
-            disabled={activeIndex === 0}
+        </article>
+      ) : (
+        <article className="project-carousel">
+          <div
+            className="project-carousel__viewer"
+            role="region"
+            aria-roledescription="carousel"
+            aria-label={`${title}, ${works.length} images`}
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
           >
-            ←
-          </button>
-          <button
-            className="project-carousel__arrow project-carousel__arrow--next"
-            type="button"
-            aria-label="Next image"
-            onClick={() => showSlide(activeIndex + 1)}
-            disabled={activeIndex === works.length - 1}
-          >
-            →
-          </button>
-        </div>
+            <div
+              ref={trackRef}
+              className="project-carousel__track"
+              onScroll={handleScroll}
+              onPointerDown={cancelCarouselAnimation}
+              onWheel={cancelCarouselAnimation}
+            >
+              {works.map((work, index) => (
+                <figure
+                  className="project-slide"
+                  key={work.slug}
+                  aria-label={`${index + 1} of ${works.length}`}
+                  aria-hidden={index !== activeIndex}
+                >
+                  <button
+                    className="project-slide__open"
+                    type="button"
+                    aria-label={`Open image ${index + 1} in full-screen viewer`}
+                    tabIndex={index === activeIndex ? 0 : -1}
+                    onClick={() => openLightbox(index)}
+                  >
+                    {work.image ? (
+                      <>
+                        {/* Original artwork files are shown without recompression. */}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`${basePath}${work.image}`}
+                          alt={work.alt}
+                          loading={index === 0 ? "eager" : "lazy"}
+                          draggable={false}
+                        />
+                      </>
+                    ) : (
+                      <div
+                        className={`artwork-placeholder art--${work.artClass}`}
+                      >
+                        <span className="placeholder-label">
+                          IMAGE COMING SOON
+                        </span>
+                      </div>
+                    )}
+                  </button>
+                </figure>
+              ))}
+            </div>
 
-        <div className="project-carousel__caption">
-          <div>
-            <p>PROJECT {projectLabel}</p>
-            <h2>
-              <button
-                className="project-carousel__title"
-                type="button"
-                aria-haspopup="dialog"
-                onClick={openProjectInfo}
-              >
-                {title}
-                <span aria-hidden="true">↗</span>
-              </button>
-            </h2>
-          </div>
-          <p className="project-carousel__details">
-            {medium}
-            <span>{year}</span>
-            <span>{works.length} IMAGES</span>
-          </p>
-          <p className="project-carousel__counter" aria-live="polite">
-            {(activeIndex + 1).toString().padStart(2, "0")}
-            <span> / {works.length.toString().padStart(2, "0")}</span>
-          </p>
-        </div>
-
-        <div className="project-carousel__pagination" aria-label="Choose image">
-          {works.map((work, index) => (
             <button
-              key={work.slug}
+              className="project-carousel__arrow project-carousel__arrow--previous"
               type="button"
-              aria-label={`Show image ${index + 1}`}
-              aria-current={index === activeIndex ? "true" : undefined}
-              onClick={() => showSlide(index)}
-            />
-          ))}
-        </div>
-      </article>
+              aria-label="Previous image"
+              onClick={() => showSlide(activeIndex - 1)}
+              disabled={activeIndex === 0}
+            >
+              ←
+            </button>
+            <button
+              className="project-carousel__arrow project-carousel__arrow--next"
+              type="button"
+              aria-label="Next image"
+              onClick={() => showSlide(activeIndex + 1)}
+              disabled={activeIndex === works.length - 1}
+            >
+              →
+            </button>
+          </div>
+
+          <div className="project-carousel__caption">
+            <div>
+              <p>PROJECT {projectLabel}</p>
+              <h2>
+                <button
+                  className="project-carousel__title"
+                  type="button"
+                  aria-haspopup="dialog"
+                  onClick={openProjectInfo}
+                >
+                  {title}
+                </button>
+              </h2>
+            </div>
+            <p className="project-carousel__details">
+              {medium}
+              <span>{year}</span>
+              <span>{works.length} IMAGES</span>
+            </p>
+            <p className="project-carousel__counter" aria-live="polite">
+              {(activeIndex + 1).toString().padStart(2, "0")}
+              <span> / {works.length.toString().padStart(2, "0")}</span>
+            </p>
+          </div>
+
+          <div
+            className="project-carousel__pagination"
+            aria-label="Choose image"
+          >
+            {works.map((work, index) => (
+              <button
+                key={work.slug}
+                type="button"
+                aria-label={`Show image ${index + 1}`}
+                aria-current={index === activeIndex ? "true" : undefined}
+                onClick={() => showSlide(index)}
+              />
+            ))}
+          </div>
+        </article>
+      )}
 
       {lightboxWork?.image && lightboxIndex !== null ? (
         <div
@@ -675,6 +742,35 @@ export function ProjectCarousel({
             >
               ←
             </button>
+
+            <div
+              className="artwork-lightbox__zoom"
+              aria-label="Image zoom controls"
+            >
+              <button
+                type="button"
+                aria-label="Zoom out"
+                onClick={() => changeZoom(-0.5)}
+                disabled={zoom === 1}
+              >
+                −
+              </button>
+              <button
+                type="button"
+                aria-label="Reset zoom"
+                onClick={() => setZoom(1)}
+              >
+                {Math.round(zoom * 100)}%
+              </button>
+              <button
+                type="button"
+                aria-label="Zoom in"
+                onClick={() => changeZoom(0.5)}
+                disabled={zoom === 4}
+              >
+                +
+              </button>
+            </div>
 
             <div className="artwork-lightbox__identity">
               <strong>{title}</strong>
