@@ -209,6 +209,11 @@ a {
   touch-action: pan-x pan-y;
 }
 
+.project-carousel__track.is-animating {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
 .project-carousel__track::-webkit-scrollbar {
   display: none;
 }
@@ -268,12 +273,25 @@ a {
   font: inherit;
   font-size: 24px;
   cursor: pointer;
-  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.92);
   transition:
     color 180ms ease,
     background 180ms ease,
-    opacity 180ms ease,
-    transform 180ms ease;
+    opacity 220ms ease,
+    transform 220ms ease,
+    visibility 0s linear 220ms;
+}
+
+.project-carousel__viewer:hover .project-carousel__arrow,
+.project-carousel__viewer:focus-within .project-carousel__arrow {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+  transition-delay: 0s;
 }
 
 .project-carousel__arrow:hover,
@@ -291,6 +309,7 @@ a {
 .project-carousel__arrow:disabled {
   opacity: 0.24;
   cursor: default;
+  pointer-events: none;
 }
 
 .project-carousel__arrow:disabled:hover {

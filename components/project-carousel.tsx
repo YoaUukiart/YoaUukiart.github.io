@@ -39,6 +39,7 @@ export function ProjectCarousel({
   works,
 }: ProjectCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const carouselAnimationRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
@@ -145,6 +146,34 @@ export function ProjectCarousel({
     };
   }, [lightboxIndex, overlayOpen, restoreEntryPosition, works.length]);
 
+  useEffect(
+    () => () => {
+      if (carouselAnimationRef.current !== null) {
+        cancelAnimationFrame(carouselAnimationRef.current);
+      }
+    },
+    [],
+  );
+
+  function cancelCarouselAnimation() {
+    if (carouselAnimationRef.current === null) {
+      return;
+    }
+
+    cancelAnimationFrame(carouselAnimationRef.current);
+    carouselAnimationRef.current = null;
+
+    const track = trackRef.current;
+    track?.classList.remove("is-animating");
+
+    if (track && track.clientWidth > 0) {
+      const settledIndex = Math.round(track.scrollLeft / track.clientWidth);
+      setActiveIndex(
+        Math.min(Math.max(settledIndex, 0), works.length - 1),
+      );
+    }
+  }
+
   function showSlide(index: number) {
     const nextIndex = Math.min(Math.max(index, 0), works.length - 1);
     const track = trackRef.current;
@@ -153,17 +182,65 @@ export function ProjectCarousel({
       return;
     }
 
-    track.scrollTo({
-      left: track.clientWidth * nextIndex,
-      behavior: "smooth",
-    });
+    cancelCarouselAnimation();
+
+    const startPosition = track.scrollLeft;
+    const targetPosition = track.clientWidth * nextIndex;
+    const distance = targetPosition - startPosition;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
     setActiveIndex(nextIndex);
+
+    if (Math.abs(distance) < 1 || reducedMotion) {
+      track.scrollLeft = targetPosition;
+      return;
+    }
+
+    const duration = 720;
+    const startTime = performance.now();
+    track.classList.add("is-animating");
+
+    function animateScroll(currentTime: number) {
+      const animatedTrack = trackRef.current;
+
+      if (!animatedTrack) {
+        carouselAnimationRef.current = null;
+        return;
+      }
+
+      const elapsed = Math.min((currentTime - startTime) / duration, 1);
+      const easedProgress =
+        elapsed < 0.5
+          ? 4 * elapsed * elapsed * elapsed
+          : 1 - Math.pow(-2 * elapsed + 2, 3) / 2;
+
+      animatedTrack.scrollLeft =
+        startPosition + distance * easedProgress;
+
+      if (elapsed < 1) {
+        carouselAnimationRef.current =
+          requestAnimationFrame(animateScroll);
+        return;
+      }
+
+      animatedTrack.scrollLeft = targetPosition;
+      animatedTrack.classList.remove("is-animating");
+      carouselAnimationRef.current = null;
+    }
+
+    carouselAnimationRef.current = requestAnimationFrame(animateScroll);
   }
 
   function handleScroll() {
     const track = trackRef.current;
 
-    if (!track || track.clientWidth === 0) {
+    if (
+      !track ||
+      track.clientWidth === 0 ||
+      carouselAnimationRef.current !== null
+    ) {
       return;
     }
 
@@ -398,6 +475,8 @@ export function ProjectCarousel({
             ref={trackRef}
             className="project-carousel__track"
             onScroll={handleScroll}
+            onPointerDown={cancelCarouselAnimation}
+            onWheel={cancelCarouselAnimation}
           >
             {works.map((work, index) => (
               <figure
