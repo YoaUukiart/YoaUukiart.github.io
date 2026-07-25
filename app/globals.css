@@ -522,7 +522,7 @@ a {
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  cursor: zoom-in;
+  cursor: default;
 }
 
 .artwork-lightbox__stage {
@@ -541,6 +541,7 @@ a {
   height: 100%;
   object-fit: contain;
   user-select: none;
+  cursor: zoom-out;
 }
 
 .artwork-lightbox__footer {
