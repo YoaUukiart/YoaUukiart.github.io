@@ -1,4 +1,5 @@
 import { ProjectCarousel } from "@/components/project-carousel";
+import { WorkPanels } from "@/components/work-panels";
 import { portfolio, projects } from "@/content/portfolio";
 
 export default function Home() {
@@ -10,8 +11,12 @@ export default function Home() {
         </a>
 
         <nav aria-label="主导航">
-          <a href="#selected">Selected</a>
-          <a href="#archive">Archive</a>
+          <a href="#selected" data-work-panel="selected">
+            Selected
+          </a>
+          <a href="#archive" data-work-panel="archive">
+            Archive
+          </a>
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -25,65 +30,66 @@ export default function Home() {
           <h1 id="page-title">{portfolio.headline}</h1>
           <p>{portfolio.intro}</p>
         </div>
-        <a href="#selected" aria-label="前往精选作品">
+        <a
+          href="#selected"
+          data-work-panel="selected"
+          aria-label="前往精选作品"
+        >
           View selected project <span aria-hidden="true">↓</span>
         </a>
       </section>
 
-      <section
-        className="selected-section"
-        id="selected"
-        aria-labelledby="selected-title"
-      >
-        <div className="section-bar">
-          <h2 id="selected-title">Selected</h2>
-          <span>{portfolio.year}</span>
-          <span>{projects.length.toString().padStart(2, "0")} projects</span>
-        </div>
+      <WorkPanels
+        selected={
+          <>
+            <div className="section-bar">
+              <h2 id="selected-title">Selected</h2>
+              <span>{portfolio.year}</span>
+              <span>{projects.length.toString().padStart(2, "0")} projects</span>
+            </div>
 
-        {projects.map((project, index) => (
-          <ProjectCarousel
-            key={project.slug}
-            projectNumber={index + 1}
-            title={project.title}
-            year={project.year}
-            medium={project.medium}
-            description={project.description}
-            works={project.works}
-          />
-        ))}
-      </section>
+            {projects.map((project, index) => (
+              <ProjectCarousel
+                key={project.slug}
+                projectNumber={index + 1}
+                title={project.title}
+                year={project.year}
+                medium={project.medium}
+                description={project.description}
+                works={project.works}
+              />
+            ))}
+          </>
+        }
+        archive={
+          <>
+            <div className="section-bar">
+              <h2 id="archive-title">Archive</h2>
+              <span>All works</span>
+              <span>
+                {projects.reduce(
+                  (total, project) => total + project.works.length,
+                  0,
+                )}{" "}
+                images
+              </span>
+            </div>
 
-      <section
-        className="archive-section"
-        id="archive"
-        aria-labelledby="archive-title"
-      >
-        <div className="section-bar">
-          <h2 id="archive-title">Archive</h2>
-          <span>All works</span>
-          <span>
-            {projects.reduce(
-              (total, project) => total + project.works.length,
-              0,
-            )}{" "}
-            images
-          </span>
-        </div>
-
-        {projects.map((project, index) => (
-          <ProjectCarousel
-            key={`archive-${project.slug}`}
-            variant="archive"
-            projectNumber={index + 1}
-            title={project.title}
-            year={project.year}
-            medium={project.medium}
-            description={project.description}
-            works={project.works}
-          />
-        ))}
-      </section>
+            {projects.map((project, index) => (
+              <ProjectCarousel
+                key={`archive-${project.slug}`}
+                variant="archive"
+                projectNumber={index + 1}
+                title={project.title}
+                year={project.year}
+                medium={project.medium}
+                description={project.description}
+                works={project.works}
+              />
+            ))}
+          </>
+        }
+      />
 
       <section className="about-section" id="about" aria-labelledby="about-title">
         <div className="section-bar section-bar--light">

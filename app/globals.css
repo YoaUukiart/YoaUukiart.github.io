@@ -54,12 +54,14 @@ a {
   font-weight: 700;
   letter-spacing: -0.045em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .minimal-header nav {
   display: flex;
   align-items: center;
   gap: clamp(18px, 2.7vw, 42px);
+  white-space: nowrap;
 }
 
 .minimal-header nav a {
@@ -110,17 +112,17 @@ a {
   font-size: 10px;
   line-height: 1.6;
   letter-spacing: 0.11em;
+  white-space: nowrap;
 }
 
 .intro-section__copy h1 {
-  max-width: 880px;
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(45px, 5.9vw, 90px);
+  font-size: clamp(18px, 5.2vw, 90px);
   font-weight: 400;
   line-height: 1.03;
   letter-spacing: -0.055em;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
 .intro-section__copy > p {
@@ -142,6 +144,7 @@ a {
   border-bottom: 1px solid currentColor;
   font-size: 12px;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .intro-section > a span {
@@ -158,6 +161,103 @@ a {
   padding: 0 clamp(18px, 2.7vw, 42px);
 }
 
+.work-panels {
+  border-bottom: 1px solid var(--line);
+}
+
+.work-panels__switcher {
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 0 clamp(18px, 2.7vw, 42px);
+  border-bottom: 1px solid var(--line);
+}
+
+.work-panels__switcher button {
+  position: relative;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  font: inherit;
+  font-size: clamp(12px, 1.2vw, 16px);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 220ms ease;
+}
+
+.work-panels__switcher button::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.work-panels__switcher button:first-child {
+  text-align: left;
+}
+
+.work-panels__switcher button:last-child {
+  text-align: right;
+}
+
+.work-panels__switcher button.is-active {
+  color: var(--ink);
+}
+
+.work-panels__switcher button.is-active::after {
+  transform: scaleX(1);
+}
+
+.work-panels__switcher button:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: -8px;
+}
+
+.work-panels__viewport {
+  overflow: hidden;
+  transition: height 700ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.work-panels__track {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+  outline: none;
+}
+
+.work-panels__track.is-animating {
+  scroll-snap-type: none;
+}
+
+.work-panels__track::-webkit-scrollbar {
+  display: none;
+}
+
+.work-panels__track:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.work-panels__panel {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 .section-bar {
   min-height: 86px;
   display: grid;
@@ -171,11 +271,13 @@ a {
   margin: 0;
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .section-bar span {
   color: var(--muted);
   font-size: 11px;
+  white-space: nowrap;
 }
 
 .section-bar span:last-child {
@@ -348,10 +450,11 @@ a {
 .project-carousel__caption h2 {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(38px, 5.5vw, 84px);
+  font-size: clamp(26px, 5.5vw, 84px);
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: -0.055em;
+  white-space: nowrap;
 }
 
 .project-carousel__title {
@@ -378,6 +481,7 @@ a {
   font-size: 9px;
   line-height: 1.4;
   letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .project-carousel__counter {
@@ -717,13 +821,13 @@ a {
 }
 
 .project-info__copy h2 {
-  max-width: 620px;
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(48px, 6vw, 90px);
+  font-size: clamp(26px, 6vw, 90px);
   font-weight: 400;
   line-height: 0.96;
   letter-spacing: -0.06em;
+  white-space: nowrap;
 }
 
 .project-info__copy dl {
@@ -906,6 +1010,7 @@ a {
   color: var(--muted);
   font-size: 9px;
   letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .archive-gallery__project-header > span:last-child {
@@ -918,6 +1023,7 @@ a {
   font-size: clamp(30px, 3.4vw, 52px);
   font-weight: 400;
   letter-spacing: -0.04em;
+  white-space: nowrap;
 }
 
 .archive-gallery__project-header p {
@@ -926,6 +1032,7 @@ a {
   font-size: 9px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .archive-gallery__grid {
@@ -1012,14 +1119,13 @@ a {
 }
 
 .about-layout > h2 {
-  max-width: 850px;
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(42px, 5.8vw, 88px);
+  font-size: clamp(14px, 2.7vw, 52px);
   font-weight: 400;
   line-height: 1.07;
   letter-spacing: -0.055em;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
 .about-layout__body p {
@@ -1075,14 +1181,13 @@ a {
 }
 
 .contact-section > h2 {
-  max-width: 980px;
   margin: clamp(70px, 8vw, 125px) 0 0;
   font-family: var(--serif);
-  font-size: clamp(48px, 7.3vw, 112px);
+  font-size: clamp(19px, 5vw, 80px);
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -0.06em;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
 .contact-section > p {
@@ -1106,6 +1211,7 @@ a {
   font-size: clamp(24px, 4.6vw, 70px);
   letter-spacing: -0.05em;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .contact-section > a span {
@@ -1125,6 +1231,7 @@ a {
   gap: 30px;
   padding: 24px clamp(18px, 2.7vw, 42px);
   border-top: 1px solid var(--line);
+  white-space: nowrap;
 }
 
 .site-footer strong {
@@ -1238,13 +1345,13 @@ a {
   }
 
   .project-carousel__caption h2 {
-    font-size: clamp(42px, 15vw, 64px);
+    font-size: clamp(26px, 9vw, 64px);
   }
 
   .project-carousel__details {
     grid-column: 1 / -1;
     grid-row: auto;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px 14px;
   }
 
@@ -1321,7 +1428,7 @@ a {
   }
 
   .project-info__copy h2 {
-    font-size: clamp(48px, 16vw, 72px);
+    font-size: clamp(26px, 9vw, 72px);
   }
 
   .project-info__copy dl {
