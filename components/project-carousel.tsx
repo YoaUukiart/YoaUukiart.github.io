@@ -13,6 +13,12 @@ type ProjectCarouselProps = {
   works: PortfolioWork[];
 };
 
+type LightboxTransition = {
+  fromIndex: number;
+  toIndex: number;
+  direction: -1 | 1;
+};
+
 function getTouchDistance(touches: React.TouchList) {
   const firstTouch = touches[0];
   const secondTouch = touches[1];
@@ -44,6 +50,8 @@ export function ProjectCarousel({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [lightboxTransition, setLightboxTransition] =
+    useState<LightboxTransition | null>(null);
   const lightboxScrollRef = useRef<HTMLDivElement>(null);
   const lightboxGestureRef = useRef({
     startX: 0,
@@ -87,6 +95,46 @@ export function ProjectCarousel({
     });
   }, []);
 
+  const moveLightbox = useCallback(
+    (direction: -1 | 1) => {
+      if (lightboxIndex === null || lightboxTransition !== null) {
+        return;
+      }
+
+      const nextIndex = Math.min(
+        Math.max(lightboxIndex + direction, 0),
+        works.length - 1,
+      );
+
+      if (nextIndex === lightboxIndex) {
+        return;
+      }
+
+      lightboxScrollRef.current?.scrollTo({
+        left: 0,
+        top: 0,
+        behavior: "auto",
+      });
+      setZoom(1);
+      suppressImageClickUntilRef.current = Date.now() + 500;
+
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        setLightboxIndex(nextIndex);
+        setActiveIndex(nextIndex);
+        return;
+      }
+
+      setLightboxTransition({
+        fromIndex: lightboxIndex,
+        toIndex: nextIndex,
+        direction,
+      });
+    },
+    [lightboxIndex, lightboxTransition, works.length],
+  );
+
   useEffect(() => {
     if (!overlayOpen) {
       return;
@@ -99,14 +147,18 @@ export function ProjectCarousel({
       if (event.key === "Escape") {
         if (lightboxIndex !== null) {
           const track = trackRef.current;
+          const returnIndex =
+            lightboxTransition?.toIndex ?? lightboxIndex;
 
           track?.scrollTo({
-            left: track.clientWidth * lightboxIndex,
+            left: track.clientWidth * returnIndex,
             behavior: "auto",
           });
+          setActiveIndex(returnIndex);
         }
 
         setLightboxIndex(null);
+        setLightboxTransition(null);
         setInfoOpen(false);
         setZoom(1);
         restoreEntryPosition();
@@ -119,22 +171,12 @@ export function ProjectCarousel({
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        setLightboxIndex((current) => {
-          const next = Math.max((current ?? 0) - 1, 0);
-          setActiveIndex(next);
-          return next;
-        });
-        setZoom(1);
+        moveLightbox(-1);
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        setLightboxIndex((current) => {
-          const next = Math.min((current ?? 0) + 1, works.length - 1);
-          setActiveIndex(next);
-          return next;
-        });
-        setZoom(1);
+        moveLightbox(1);
       }
     }
 
@@ -144,7 +186,13 @@ export function ProjectCarousel({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleGlobalKeyDown);
     };
-  }, [lightboxIndex, overlayOpen, restoreEntryPosition, works.length]);
+  }, [
+    lightboxIndex,
+    lightboxTransition,
+    moveLightbox,
+    overlayOpen,
+    restoreEntryPosition,
+  ]);
 
   useEffect(
     () => () => {
@@ -273,16 +321,21 @@ export function ProjectCarousel({
   function openLightbox(index: number) {
     rememberEntryPosition();
     setLightboxIndex(index);
+    setLightboxTransition(null);
     setActiveIndex(index);
     setZoom(1);
   }
 
   function closeLightbox() {
-    if (lightboxIndex !== null) {
-      showSlide(lightboxIndex);
+    const returnIndex =
+      lightboxTransition?.toIndex ?? lightboxIndex;
+
+    if (returnIndex !== null) {
+      showSlide(returnIndex);
     }
 
     setLightboxIndex(null);
+    setLightboxTransition(null);
     setZoom(1);
     restoreEntryPosition();
   }
@@ -297,25 +350,44 @@ export function ProjectCarousel({
     restoreEntryPosition();
   }
 
-  function moveLightbox(direction: -1 | 1) {
-    setLightboxIndex((current) => {
-      if (current === null) {
-        return current;
-      }
+  function finishLightboxTransition() {
+    if (!lightboxTransition) {
+      return;
+    }
 
-      const next = Math.min(
-        Math.max(current + direction, 0),
-        works.length - 1,
-      );
-      setActiveIndex(next);
-      return next;
-    });
+    setLightboxIndex(lightboxTransition.toIndex);
+    setActiveIndex(lightboxTransition.toIndex);
+    setLightboxTransition(null);
     setZoom(1);
+
+    requestAnimationFrame(() => {
+      lightboxScrollRef.current?.scrollTo({
+        left: 0,
+        top: 0,
+        behavior: "auto",
+      });
+    });
+  }
+
+  function handleLightboxImageClick(
+    event: React.MouseEvent<HTMLImageElement>,
+  ) {
+    if (Date.now() < suppressImageClickUntilRef.current) {
+      event.preventDefault();
+      return;
+    }
+
+    closeLightbox();
   }
 
   function handleLightboxTouchStart(
     event: React.TouchEvent<HTMLDivElement>,
   ) {
+    if (lightboxTransition) {
+      event.preventDefault();
+      return;
+    }
+
     const gesture = lightboxGestureRef.current;
 
     if (event.touches.length === 2) {
@@ -459,6 +531,17 @@ export function ProjectCarousel({
 
   const lightboxWork =
     lightboxIndex === null ? null : works[lightboxIndex] ?? null;
+  const lightboxTransitionWorks = lightboxTransition
+    ? lightboxTransition.direction === 1
+      ? [
+          works[lightboxTransition.fromIndex],
+          works[lightboxTransition.toIndex],
+        ]
+      : [
+          works[lightboxTransition.toIndex],
+          works[lightboxTransition.fromIndex],
+        ]
+    : [];
 
   return (
     <>
@@ -604,36 +687,63 @@ export function ProjectCarousel({
 
           <div
             ref={lightboxScrollRef}
-            className="artwork-lightbox__scroll"
+            className={`artwork-lightbox__scroll${
+              lightboxTransition ? " is-transitioning" : ""
+            }`}
             onTouchStart={handleLightboxTouchStart}
             onTouchMove={handleLightboxTouchMove}
             onTouchEnd={handleLightboxTouchEnd}
             onTouchCancel={handleLightboxTouchCancel}
           >
-            <div
-              className="artwork-lightbox__stage"
-              style={{
-                width: `${zoom * 100}%`,
-                height: `${zoom * 100}%`,
-              }}
-            >
-              {/* Original artwork files are shown without recompression. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`${basePath}${lightboxWork.image}`}
-                alt={lightboxWork.alt}
-                draggable={false}
-                title="Click to return · Swipe to change · Pinch to zoom"
-                onClick={(event) => {
-                  if (Date.now() < suppressImageClickUntilRef.current) {
-                    event.preventDefault();
-                    return;
+            {lightboxTransition ? (
+              <div
+                className={`artwork-lightbox__transition-track artwork-lightbox__transition-track--${
+                  lightboxTransition.direction === 1 ? "next" : "previous"
+                }`}
+                aria-hidden="true"
+                onAnimationEnd={(event) => {
+                  if (event.target === event.currentTarget) {
+                    finishLightboxTransition();
                   }
-
-                  closeLightbox();
                 }}
-              />
-            </div>
+              >
+                {lightboxTransitionWorks.map((work, index) =>
+                  work?.image ? (
+                    <div
+                      className="artwork-lightbox__transition-slide"
+                      key={`${work.slug}-${index}`}
+                    >
+                      {/* Original artwork files are shown without recompression. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`${basePath}${work.image}`}
+                        alt=""
+                        draggable={false}
+                        onClick={handleLightboxImageClick}
+                      />
+                    </div>
+                  ) : null,
+                )}
+              </div>
+            ) : (
+              <div
+                className="artwork-lightbox__stage"
+                style={{
+                  width: `${zoom * 100}%`,
+                  height: `${zoom * 100}%`,
+                }}
+              >
+                {/* Original artwork files are shown without recompression. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`${basePath}${lightboxWork.image}`}
+                  alt={lightboxWork.alt}
+                  draggable={false}
+                  title="Click to return · Swipe to change · Pinch to zoom"
+                  onClick={handleLightboxImageClick}
+                />
+              </div>
+            )}
           </div>
         </div>
       ) : null}
