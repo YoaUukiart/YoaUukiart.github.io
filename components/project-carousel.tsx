@@ -555,17 +555,6 @@ export function ProjectCarousel({
     <>
       {variant === "archive" ? (
         <article className="archive-gallery__project">
-          <header className="archive-gallery__project-header">
-            <span>PROJECT {projectLabel}</span>
-            <div>
-              <h3>{title}</h3>
-              <p>
-                {medium} · {year}
-              </p>
-            </div>
-            <span>{works.length} IMAGES</span>
-          </header>
-
           <div
             className="archive-gallery__grid"
             aria-label={`${title}, ${works.length} archived images`}
@@ -600,10 +589,6 @@ export function ProjectCarousel({
                     </div>
                   )}
                 </div>
-                <span className="archive-thumbnail__caption">
-                  <span>{(index + 1).toString().padStart(2, "0")}</span>
-                  <span>{work.title}</span>
-                </span>
               </button>
             ))}
           </div>
@@ -773,7 +758,7 @@ export function ProjectCarousel({
             </div>
 
             <div className="artwork-lightbox__identity">
-              <strong>{title}</strong>
+              {variant !== "archive" ? <strong>{title}</strong> : null}
               <span>
                 {(lightboxIndex + 1).toString().padStart(2, "0")} /{" "}
                 {works.length.toString().padStart(2, "0")}
