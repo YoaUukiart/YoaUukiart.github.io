@@ -10,10 +10,14 @@ import {
 } from "react";
 
 const PANEL_TRANSITION_MS = 700;
+const PAGE_IDS = ["selected", "archive", "about", "contact"] as const;
+const PAGE_LABELS = ["Selected", "Archive", "About", "Contact"] as const;
 
-type WorkPanelsProps = {
+type SitePanelsProps = {
   selected: ReactNode;
   archive: ReactNode;
+  about: ReactNode;
+  contact: ReactNode;
 };
 
 function easeInOutCubic(progress: number) {
@@ -22,13 +26,19 @@ function easeInOutCubic(progress: number) {
     : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 }
 
-export function WorkPanels({ selected, archive }: WorkPanelsProps) {
+export function SitePanels({
+  selected,
+  archive,
+  about,
+  contact,
+}: SitePanelsProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<Array<HTMLElement | null>>([]);
   const animationRef = useRef<number | null>(null);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewportHeight, setViewportHeight] = useState<number>();
+  const pageContent = [selected, archive, about, contact];
 
   const updateHeight = useCallback((index = activeIndexRef.current) => {
     const panel = panelRefs.current[index];
@@ -47,15 +57,28 @@ export function WorkPanels({ selected, archive }: WorkPanelsProps) {
     trackRef.current?.classList.remove("is-animating");
   }, []);
 
+  const updateActivePage = useCallback(
+    (index: number) => {
+      activeIndexRef.current = index;
+      setActiveIndex(index);
+      updateHeight(index);
+      window.history.replaceState(null, "", `#${PAGE_IDS[index]}`);
+    },
+    [updateHeight],
+  );
+
   const showPanel = useCallback(
-    (requestedIndex: number, animate = true) => {
+    (requestedIndex: number, animate = true, resetScroll = false) => {
       const track = trackRef.current;
 
       if (!track) {
         return;
       }
 
-      const index = requestedIndex <= 0 ? 0 : 1;
+      const index = Math.min(
+        PAGE_IDS.length - 1,
+        Math.max(0, requestedIndex),
+      );
       const target = track.clientWidth * index;
       const start = track.scrollLeft;
       const distance = target - start;
@@ -64,9 +87,11 @@ export function WorkPanels({ selected, archive }: WorkPanelsProps) {
       ).matches;
 
       cancelAnimation();
-      activeIndexRef.current = index;
-      setActiveIndex(index);
-      updateHeight(index);
+      updateActivePage(index);
+
+      if (resetScroll) {
+        window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      }
 
       if (!animate || reduceMotion || Math.abs(distance) < 1) {
         track.scrollLeft = target;
@@ -92,7 +117,7 @@ export function WorkPanels({ selected, archive }: WorkPanelsProps) {
 
       animationRef.current = requestAnimationFrame(step);
     },
-    [cancelAnimation, updateHeight],
+    [cancelAnimation, updateActivePage],
   );
 
   useEffect(() => {
@@ -110,36 +135,15 @@ export function WorkPanels({ selected, archive }: WorkPanelsProps) {
   }, [updateHeight]);
 
   useEffect(() => {
-    const panelLinks = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>("[data-work-panel]"),
+    const initialIndex = PAGE_IDS.findIndex(
+      (pageId) => `#${pageId}` === window.location.hash,
     );
 
-    const handlePanelLink = (event: Event) => {
-      const link = event.currentTarget as HTMLAnchorElement;
-      const panelName = link.dataset.workPanel;
-      const index = panelName === "archive" ? 1 : 0;
-
-      event.preventDefault();
-      showPanel(index);
-      document
-        .getElementById("works")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.replaceState(null, "", index === 1 ? "#archive" : "#selected");
-    };
-
-    panelLinks.forEach((link) =>
-      link.addEventListener("click", handlePanelLink),
+    requestAnimationFrame(() =>
+      showPanel(initialIndex >= 0 ? initialIndex : 0, false),
     );
 
-    const initialIndex = window.location.hash === "#archive" ? 1 : 0;
-    requestAnimationFrame(() => showPanel(initialIndex, false));
-
-    return () => {
-      panelLinks.forEach((link) =>
-        link.removeEventListener("click", handlePanelLink),
-      );
-      cancelAnimation();
-    };
+    return cancelAnimation;
   }, [cancelAnimation, showPanel]);
 
   const handleScroll = () => {
@@ -150,94 +154,91 @@ export function WorkPanels({ selected, archive }: WorkPanelsProps) {
     }
 
     const index = Math.min(
-      1,
+      PAGE_IDS.length - 1,
       Math.max(0, Math.round(track.scrollLeft / track.clientWidth)),
     );
 
     if (index !== activeIndexRef.current) {
-      activeIndexRef.current = index;
-      setActiveIndex(index);
-      updateHeight(index);
-      window.history.replaceState(
-        null,
-        "",
-        index === 1 ? "#archive" : "#selected",
-      );
+      updateActivePage(index);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "ArrowLeft" || event.key === "Home") {
+    if (event.key === "ArrowLeft") {
       event.preventDefault();
-      showPanel(0);
+      showPanel(activeIndexRef.current - 1, true, true);
     }
 
-    if (event.key === "ArrowRight" || event.key === "End") {
+    if (event.key === "ArrowRight") {
       event.preventDefault();
-      showPanel(1);
+      showPanel(activeIndexRef.current + 1, true, true);
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      showPanel(0, true, true);
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      showPanel(PAGE_IDS.length - 1, true, true);
     }
   };
 
   return (
-    <section className="work-panels" id="works" aria-label="作品展示">
-      <nav className="work-panels__switcher" aria-label="切换作品页面">
-        <button
-          className={activeIndex === 0 ? "is-active" : undefined}
-          type="button"
-          aria-pressed={activeIndex === 0}
-          onClick={() => showPanel(0)}
-        >
-          Selected
-        </button>
-        <button
-          className={activeIndex === 1 ? "is-active" : undefined}
-          type="button"
-          aria-pressed={activeIndex === 1}
-          onClick={() => showPanel(1)}
-        >
-          Archive
-        </button>
-      </nav>
+    <>
+      <header className="minimal-header">
+        <nav aria-label="Main navigation">
+          {PAGE_LABELS.map((label, index) => (
+            <button
+              className={activeIndex === index ? "is-active" : undefined}
+              type="button"
+              key={label}
+              aria-current={activeIndex === index ? "page" : undefined}
+              onClick={() => showPanel(index, true, true)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+      </header>
 
       <div
-        className="work-panels__viewport"
+        className="site-panels__viewport"
         style={
           viewportHeight === undefined ? undefined : { height: viewportHeight }
         }
       >
         <div
-          className="work-panels__track"
+          className="site-panels__track"
           ref={trackRef}
           tabIndex={0}
-          aria-label="左右滑动切换 Selected 与 Archive"
+          aria-label="Swipe between Selected, Archive, About and Contact"
           onKeyDown={handleKeyDown}
           onPointerDown={cancelAnimation}
           onWheel={cancelAnimation}
           onScroll={handleScroll}
         >
-          <section
-            className="work-panels__panel selected-section"
-            id="selected"
-            aria-labelledby="selected-title"
-            ref={(panel) => {
-              panelRefs.current[0] = panel;
-            }}
-          >
-            {selected}
-          </section>
-
-          <section
-            className="work-panels__panel archive-section"
-            id="archive"
-            aria-labelledby="archive-title"
-            ref={(panel) => {
-              panelRefs.current[1] = panel;
-            }}
-          >
-            {archive}
-          </section>
+          {PAGE_IDS.map((pageId, index) => (
+            <section
+              className={`site-panels__panel${
+                activeIndex === index ? " is-active" : ""
+              }`}
+              id={pageId}
+              key={pageId}
+              aria-label={PAGE_LABELS[index]}
+              aria-hidden={activeIndex !== index}
+              inert={activeIndex !== index}
+              ref={(panel) => {
+                panelRefs.current[index] = panel;
+              }}
+            >
+              {pageContent[index]}
+            </section>
+          ))}
         </div>
       </div>
-    </section>
+    </>
   );
 }
