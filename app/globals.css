@@ -189,8 +189,8 @@ a {
 .project-carousel__viewer {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--line);
-  background: #ecebe6;
+  border: 0;
+  background: transparent;
   outline: none;
 }
 
@@ -200,6 +200,7 @@ a {
 
 .project-carousel__track {
   display: flex;
+  align-items: center;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
@@ -214,7 +215,6 @@ a {
 
 .project-slide {
   flex: 0 0 100%;
-  height: clamp(520px, 76vh, 940px);
   display: grid;
   place-items: center;
   margin: 0;
@@ -224,16 +224,19 @@ a {
 
 .project-slide img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(76vh, 940px);
   object-fit: contain;
   user-select: none;
 }
 
 .project-slide__open {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: fit-content;
+  max-width: 100%;
+  height: fit-content;
   display: grid;
   place-items: center;
   padding: 0;
@@ -1113,7 +1116,11 @@ a {
   }
 
   .project-slide {
-    height: clamp(430px, 68vh, 680px);
+    height: auto;
+  }
+
+  .project-slide img {
+    max-height: min(68vh, 680px);
   }
 
   .project-carousel__arrow {
