@@ -154,3 +154,11 @@ export const works: PortfolioWork[] = [
     featured: true,
   },
 ];
+
+export const untitledProject = {
+  slug: "untitled",
+  title: "untitled",
+  year: "2026",
+  medium: "DIGITAL PAINTING",
+  works,
+} as const;
