@@ -13,6 +13,23 @@ type ProjectCarouselProps = {
   works: PortfolioWork[];
 };
 
+function getTouchDistance(touches: React.TouchList) {
+  const firstTouch = touches[0];
+  const secondTouch = touches[1];
+
+  return Math.hypot(
+    secondTouch.clientX - firstTouch.clientX,
+    secondTouch.clientY - firstTouch.clientY,
+  );
+}
+
+function getTouchCenter(touches: React.TouchList) {
+  return {
+    x: (touches[0].clientX + touches[1].clientX) / 2,
+    y: (touches[0].clientY + touches[1].clientY) / 2,
+  };
+}
+
 export function ProjectCarousel({
   projectNumber,
   title,
@@ -26,6 +43,22 @@ export function ProjectCarousel({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [infoOpen, setInfoOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const lightboxScrollRef = useRef<HTMLDivElement>(null);
+  const lightboxGestureRef = useRef({
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    startDistance: 0,
+    startZoom: 1,
+    startScrollLeft: 0,
+    startScrollTop: 0,
+    pinchOriginX: 0,
+    pinchOriginY: 0,
+    pinching: false,
+    moved: false,
+  });
+  const suppressImageClickUntilRef = useRef(0);
   const entryScrollYRef = useRef(0);
   const entryElementRef = useRef<HTMLElement | null>(null);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -203,10 +236,148 @@ export function ProjectCarousel({
     setZoom(1);
   }
 
-  function changeZoom(amount: number) {
-    setZoom((current) =>
-      Math.min(Math.max(Number((current + amount).toFixed(1)), 1), 4),
-    );
+  function handleLightboxTouchStart(
+    event: React.TouchEvent<HTMLDivElement>,
+  ) {
+    const gesture = lightboxGestureRef.current;
+
+    if (event.touches.length === 2) {
+      event.preventDefault();
+      const scrollContainer = lightboxScrollRef.current;
+      const scrollBounds = scrollContainer?.getBoundingClientRect();
+      const pinchCenter = getTouchCenter(event.touches);
+
+      gesture.startDistance = getTouchDistance(event.touches);
+      gesture.startZoom = zoom;
+      gesture.startScrollLeft = scrollContainer?.scrollLeft ?? 0;
+      gesture.startScrollTop = scrollContainer?.scrollTop ?? 0;
+      gesture.pinchOriginX = scrollBounds
+        ? pinchCenter.x - scrollBounds.left
+        : 0;
+      gesture.pinchOriginY = scrollBounds
+        ? pinchCenter.y - scrollBounds.top
+        : 0;
+      gesture.pinching = true;
+      gesture.moved = true;
+      suppressImageClickUntilRef.current = Date.now() + 500;
+      return;
+    }
+
+    if (event.touches.length === 1) {
+      const touch = event.touches[0];
+      gesture.startX = touch.clientX;
+      gesture.startY = touch.clientY;
+      gesture.lastX = touch.clientX;
+      gesture.lastY = touch.clientY;
+      gesture.pinching = false;
+      gesture.moved = false;
+    }
+  }
+
+  function handleLightboxTouchMove(event: React.TouchEvent<HTMLDivElement>) {
+    const gesture = lightboxGestureRef.current;
+
+    if (event.touches.length === 2 && gesture.startDistance > 0) {
+      event.preventDefault();
+      const scale = getTouchDistance(event.touches) / gesture.startDistance;
+      const nextZoom = Math.min(
+        Math.max(gesture.startZoom * scale, 1),
+        4,
+      );
+      const scrollContainer = lightboxScrollRef.current;
+      const scrollBounds = scrollContainer?.getBoundingClientRect();
+      const pinchCenter = getTouchCenter(event.touches);
+      const currentCenterX = scrollBounds
+        ? pinchCenter.x - scrollBounds.left
+        : gesture.pinchOriginX;
+      const currentCenterY = scrollBounds
+        ? pinchCenter.y - scrollBounds.top
+        : gesture.pinchOriginY;
+      const zoomRatio = nextZoom / gesture.startZoom;
+
+      gesture.pinching = true;
+      gesture.moved = true;
+      suppressImageClickUntilRef.current = Date.now() + 500;
+      setZoom(Number(nextZoom.toFixed(3)));
+      requestAnimationFrame(() => {
+        if (!scrollContainer) {
+          return;
+        }
+
+        scrollContainer.scrollLeft =
+          (gesture.startScrollLeft + gesture.pinchOriginX) * zoomRatio -
+          currentCenterX;
+        scrollContainer.scrollTop =
+          (gesture.startScrollTop + gesture.pinchOriginY) * zoomRatio -
+          currentCenterY;
+      });
+      return;
+    }
+
+    if (event.touches.length !== 1 || gesture.pinching) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    const deltaX = touch.clientX - gesture.lastX;
+    const deltaY = touch.clientY - gesture.lastY;
+
+    if (
+      Math.abs(touch.clientX - gesture.startX) > 8 ||
+      Math.abs(touch.clientY - gesture.startY) > 8
+    ) {
+      gesture.moved = true;
+    }
+
+    if (zoom > 1) {
+      event.preventDefault();
+      lightboxScrollRef.current?.scrollBy({
+        left: -deltaX,
+        top: -deltaY,
+        behavior: "auto",
+      });
+    }
+
+    gesture.lastX = touch.clientX;
+    gesture.lastY = touch.clientY;
+  }
+
+  function handleLightboxTouchEnd(event: React.TouchEvent<HTMLDivElement>) {
+    const gesture = lightboxGestureRef.current;
+
+    if (event.touches.length > 0) {
+      return;
+    }
+
+    if (gesture.pinching) {
+      gesture.pinching = false;
+      gesture.moved = false;
+      suppressImageClickUntilRef.current = Date.now() + 500;
+      return;
+    }
+
+    const deltaX = gesture.lastX - gesture.startX;
+    const deltaY = gesture.lastY - gesture.startY;
+    const isHorizontalSwipe =
+      zoom === 1 &&
+      Math.abs(deltaX) >= 52 &&
+      Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+
+    if (isHorizontalSwipe) {
+      moveLightbox(deltaX < 0 ? 1 : -1);
+    }
+
+    if (gesture.moved || isHorizontalSwipe) {
+      suppressImageClickUntilRef.current = Date.now() + 500;
+    }
+
+    gesture.moved = false;
+  }
+
+  function handleLightboxTouchCancel() {
+    lightboxGestureRef.current.pinching = false;
+    lightboxGestureRef.current.moved = false;
+    suppressImageClickUntilRef.current = Date.now() + 500;
   }
 
   const lightboxWork =
@@ -340,7 +511,7 @@ export function ProjectCarousel({
               aria-label="Back to project"
               onClick={closeLightbox}
             >
-              ← Back
+              ←
             </button>
 
             <div className="artwork-lightbox__identity">
@@ -350,35 +521,16 @@ export function ProjectCarousel({
                 {works.length.toString().padStart(2, "0")}
               </span>
             </div>
-
-            <div className="artwork-lightbox__zoom" aria-label="Zoom controls">
-              <button
-                type="button"
-                aria-label="Zoom out"
-                onClick={() => changeZoom(-0.5)}
-                disabled={zoom === 1}
-              >
-                −
-              </button>
-              <button
-                type="button"
-                aria-label="Reset zoom"
-                onClick={() => setZoom(1)}
-              >
-                {Math.round(zoom * 100)}%
-              </button>
-              <button
-                type="button"
-                aria-label="Zoom in"
-                onClick={() => changeZoom(0.5)}
-                disabled={zoom === 4}
-              >
-                +
-              </button>
-            </div>
           </header>
 
-          <div className="artwork-lightbox__scroll">
+          <div
+            ref={lightboxScrollRef}
+            className="artwork-lightbox__scroll"
+            onTouchStart={handleLightboxTouchStart}
+            onTouchMove={handleLightboxTouchMove}
+            onTouchEnd={handleLightboxTouchEnd}
+            onTouchCancel={handleLightboxTouchCancel}
+          >
             <div
               className="artwork-lightbox__stage"
               style={{
@@ -392,29 +544,18 @@ export function ProjectCarousel({
                 src={`${basePath}${lightboxWork.image}`}
                 alt={lightboxWork.alt}
                 draggable={false}
-                title="Click to return"
-                onClick={closeLightbox}
+                title="Click to return · Swipe to change · Pinch to zoom"
+                onClick={(event) => {
+                  if (Date.now() < suppressImageClickUntilRef.current) {
+                    event.preventDefault();
+                    return;
+                  }
+
+                  closeLightbox();
+                }}
               />
             </div>
           </div>
-
-          <footer className="artwork-lightbox__footer">
-            <button
-              type="button"
-              onClick={() => moveLightbox(-1)}
-              disabled={lightboxIndex === 0}
-            >
-              ← Previous
-            </button>
-            <span>Click image to return</span>
-            <button
-              type="button"
-              onClick={() => moveLightbox(1)}
-              disabled={lightboxIndex === works.length - 1}
-            >
-              Next →
-            </button>
-          </footer>
         </div>
       ) : null}
 
@@ -438,7 +579,7 @@ export function ProjectCarousel({
                 aria-label="Back to projects"
                 onClick={closeProjectInfo}
               >
-                ← Back
+                ←
               </button>
               <span>YoaUuki / Project {projectLabel}</span>
             </header>
