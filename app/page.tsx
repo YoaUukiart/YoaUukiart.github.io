@@ -61,22 +61,28 @@ export default function Home() {
       >
         <div className="section-bar">
           <h2 id="archive-title">Archive</h2>
-          <span>Projects</span>
-          <span>Updated {portfolio.year}</span>
+          <span>All works</span>
+          <span>
+            {projects.reduce(
+              (total, project) => total + project.works.length,
+              0,
+            )}{" "}
+            images
+          </span>
         </div>
 
-        <div className="archive-list">
-          {projects.map((project, index) => (
-            <article key={project.slug}>
-              <span>{(index + 1).toString().padStart(2, "0")}</span>
-              <h3>{project.title}</h3>
-              <span>
-                {project.medium} · {project.works.length} IMAGES
-              </span>
-              <span>{project.year}</span>
-            </article>
-          ))}
-        </div>
+        {projects.map((project, index) => (
+          <ProjectCarousel
+            key={`archive-${project.slug}`}
+            variant="archive"
+            projectNumber={index + 1}
+            title={project.title}
+            year={project.year}
+            medium={project.medium}
+            description={project.description}
+            works={project.works}
+          />
+        ))}
       </section>
 
       <section className="about-section" id="about" aria-labelledby="about-title">
