@@ -378,10 +378,7 @@ export function ProjectCarousel({
             </div>
           </header>
 
-          <div
-            className="artwork-lightbox__scroll"
-            onDoubleClick={() => setZoom((current) => (current === 1 ? 2 : 1))}
-          >
+          <div className="artwork-lightbox__scroll">
             <div
               className="artwork-lightbox__stage"
               style={{
@@ -395,6 +392,8 @@ export function ProjectCarousel({
                 src={`${basePath}${lightboxWork.image}`}
                 alt={lightboxWork.alt}
                 draggable={false}
+                title="Click to return"
+                onClick={closeLightbox}
               />
             </div>
           </div>
@@ -407,7 +406,7 @@ export function ProjectCarousel({
             >
               ← Previous
             </button>
-            <span>Double-click image to zoom</span>
+            <span>Click image to return</span>
             <button
               type="button"
               onClick={() => moveLightbox(1)}
