@@ -1,5 +1,5 @@
 import { ProjectCarousel } from "@/components/project-carousel";
-import { portfolio, throughMyBloodProject } from "@/content/portfolio";
+import { portfolio, projects } from "@/content/portfolio";
 
 export default function Home() {
   return (
@@ -37,17 +37,21 @@ export default function Home() {
       >
         <div className="section-bar">
           <h2 id="selected-title">Selected</h2>
-          <span>{throughMyBloodProject.year}</span>
-          <span>01 project</span>
+          <span>{portfolio.year}</span>
+          <span>{projects.length.toString().padStart(2, "0")} projects</span>
         </div>
 
-        <ProjectCarousel
-          title={throughMyBloodProject.title}
-          year={throughMyBloodProject.year}
-          medium={throughMyBloodProject.medium}
-          description={throughMyBloodProject.description}
-          works={throughMyBloodProject.works}
-        />
+        {projects.map((project, index) => (
+          <ProjectCarousel
+            key={project.slug}
+            projectNumber={index + 1}
+            title={project.title}
+            year={project.year}
+            medium={project.medium}
+            description={project.description}
+            works={project.works}
+          />
+        ))}
       </section>
 
       <section
@@ -62,15 +66,16 @@ export default function Home() {
         </div>
 
         <div className="archive-list">
-          <article>
-            <span>01</span>
-            <h3>{throughMyBloodProject.title}</h3>
-            <span>
-              {throughMyBloodProject.medium} ·{" "}
-              {throughMyBloodProject.works.length} IMAGES
-            </span>
-            <span>{throughMyBloodProject.year}</span>
-          </article>
+          {projects.map((project, index) => (
+            <article key={project.slug}>
+              <span>{(index + 1).toString().padStart(2, "0")}</span>
+              <h3>{project.title}</h3>
+              <span>
+                {project.medium} · {project.works.length} IMAGES
+              </span>
+              <span>{project.year}</span>
+            </article>
+          ))}
         </div>
       </section>
 

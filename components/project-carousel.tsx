@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { PortfolioWork } from "@/content/portfolio";
 
 type ProjectCarouselProps = {
+  projectNumber: number;
   title: string;
   year: string;
   medium: string;
@@ -13,6 +14,7 @@ type ProjectCarouselProps = {
 };
 
 export function ProjectCarousel({
+  projectNumber,
   title,
   year,
   medium,
@@ -26,6 +28,8 @@ export function ProjectCarousel({
   const [zoom, setZoom] = useState(1);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const overlayOpen = lightboxIndex !== null || infoOpen;
+  const projectLabel = projectNumber.toString().padStart(2, "0");
+  const projectTitleId = `project-info-title-${projectLabel}`;
 
   useEffect(() => {
     if (!overlayOpen) {
@@ -244,7 +248,7 @@ export function ProjectCarousel({
 
         <div className="project-carousel__caption">
           <div>
-            <p>PROJECT 01</p>
+            <p>PROJECT {projectLabel}</p>
             <h2>
               <button
                 className="project-carousel__title"
@@ -379,7 +383,7 @@ export function ProjectCarousel({
           className="project-info"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="project-info-title"
+          aria-labelledby={projectTitleId}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
               setInfoOpen(false);
@@ -388,7 +392,7 @@ export function ProjectCarousel({
         >
           <article className="project-info__panel">
             <header>
-              <span>YoaUuki / Project 01</span>
+              <span>YoaUuki / Project {projectLabel}</span>
               <button
                 type="button"
                 aria-label="Close project information"
@@ -410,8 +414,8 @@ export function ProjectCarousel({
               </div>
 
               <div className="project-info__copy">
-                <p>PROJECT 01</p>
-                <h2 id="project-info-title">{title}</h2>
+                <p>PROJECT {projectLabel}</p>
+                <h2 id={projectTitleId}>{title}</h2>
 
                 <dl>
                   <div>
