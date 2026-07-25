@@ -1,5 +1,5 @@
 import { ProjectCarousel } from "@/components/project-carousel";
-import { portfolio, untitledProject } from "@/content/portfolio";
+import { portfolio, throughMyBloodProject } from "@/content/portfolio";
 
 export default function Home() {
   return (
@@ -37,15 +37,16 @@ export default function Home() {
       >
         <div className="section-bar">
           <h2 id="selected-title">Selected</h2>
-          <span>{untitledProject.year}</span>
+          <span>{throughMyBloodProject.year}</span>
           <span>01 project</span>
         </div>
 
         <ProjectCarousel
-          title={untitledProject.title}
-          year={untitledProject.year}
-          medium={untitledProject.medium}
-          works={untitledProject.works}
+          title={throughMyBloodProject.title}
+          year={throughMyBloodProject.year}
+          medium={throughMyBloodProject.medium}
+          description={throughMyBloodProject.description}
+          works={throughMyBloodProject.works}
         />
       </section>
 
@@ -63,11 +64,12 @@ export default function Home() {
         <div className="archive-list">
           <article>
             <span>01</span>
-            <h3>{untitledProject.title}</h3>
+            <h3>{throughMyBloodProject.title}</h3>
             <span>
-              {untitledProject.medium} · {untitledProject.works.length} IMAGES
+              {throughMyBloodProject.medium} ·{" "}
+              {throughMyBloodProject.works.length} IMAGES
             </span>
-            <span>{untitledProject.year}</span>
+            <span>{throughMyBloodProject.year}</span>
           </article>
         </div>
       </section>

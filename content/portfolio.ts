@@ -155,10 +155,12 @@ export const works: PortfolioWork[] = [
   },
 ];
 
-export const untitledProject = {
-  slug: "untitled",
-  title: "untitled",
+export const throughMyBloodProject = {
+  slug: "through-my-blood",
+  title: "Through my blood",
   year: "2026",
-  medium: "DIGITAL PAINTING",
+  medium: "Digital",
+  description:
+    "A series of ten digital paintings in which bodies, lilies and vine-like forms move across saturated fields of blue and red. Viewed as a sequence, the images connect touch, tension and transformation through a shared visual language.",
   works,
 } as const;
