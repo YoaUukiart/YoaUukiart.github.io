@@ -50,12 +50,27 @@ export default function Home() {
         about={
           <section className="about-section" aria-labelledby="about-title">
             <div className="about-layout">
-              <h2 id="about-title">{portfolio.aboutTitle}</h2>
+              <div className="about-layout__titles">
+                <h2 id="about-title" lang="zh-Hant">
+                  {portfolio.aboutTitle}
+                </h2>
+                <p lang="en">{portfolio.aboutTitleEn}</p>
+              </div>
 
-              <div className="about-layout__body">
-                {portfolio.about.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
+              <div className="about-layout__languages">
+                <article className="about-layout__body" lang="zh-Hant">
+                  <p className="about-layout__language">中文 / CHINESE</p>
+                  {portfolio.about.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </article>
+
+                <article className="about-layout__body" lang="en">
+                  <p className="about-layout__language">ENGLISH</p>
+                  {portfolio.aboutEn.map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </article>
               </div>
 
               <aside className="about-facts" aria-label="艺术家信息">

@@ -992,33 +992,67 @@ a {
 }
 
 .about-layout {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr;
-  gap: clamp(50px, 8vw, 130px);
   padding-top: clamp(70px, 8vw, 130px);
 }
 
-.about-layout > h2 {
+.about-layout__titles {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(50px, 8vw, 130px);
+  padding-bottom: clamp(34px, 4vw, 58px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.about-layout__titles h2 {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(14px, 2.7vw, 52px);
+  font-size: clamp(12px, 2vw, 34px);
   font-weight: 400;
-  line-height: 1.07;
-  letter-spacing: -0.055em;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
   white-space: nowrap;
+}
+
+.about-layout__titles > p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--serif);
+  font-size: clamp(11px, 1.25vw, 18px);
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.about-layout__languages {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(46px, 7vw, 110px);
+  padding-top: clamp(44px, 6vw, 90px);
 }
 
 .about-layout__body p {
   margin: 0 0 24px;
   color: rgba(255, 255, 255, 0.75);
   font-family: var(--serif);
-  font-size: clamp(17px, 1.4vw, 21px);
-  line-height: 1.65;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.72;
+}
+
+.about-layout__body .about-layout__language {
+  margin-bottom: 28px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--sans);
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
 }
 
 .about-facts {
-  grid-column: 2;
-  margin-top: 34px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(46px, 7vw, 110px);
+  margin-top: clamp(38px, 5vw, 76px);
   border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
@@ -1314,11 +1348,31 @@ a {
   }
 
   .about-layout {
+    padding-top: 54px;
+  }
+
+  .about-layout__titles {
     grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: 28px;
+  }
+
+  .about-layout__titles h2 {
+    font-size: clamp(8px, 2.45vw, 13px);
+  }
+
+  .about-layout__titles > p {
+    font-size: clamp(8px, 2.45vw, 12px);
+  }
+
+  .about-layout__languages {
+    grid-template-columns: 1fr;
+    gap: 44px;
+    padding-top: 38px;
   }
 
   .about-facts {
-    grid-column: 1;
+    grid-template-columns: 1fr;
   }
 
 }
