@@ -92,10 +92,7 @@ export default function Home() {
             </div>
             <h2 id="contact-title">{portfolio.contactTitle}</h2>
             <p>{portfolio.contactText}</p>
-            <a href={`mailto:${portfolio.email}`}>
-              {portfolio.email}
-              <span aria-hidden="true">↗</span>
-            </a>
+            <a href={`mailto:${portfolio.email}`}>{portfolio.email}</a>
           </section>
         }
       />
