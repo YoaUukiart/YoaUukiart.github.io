@@ -11,10 +11,19 @@ export const portfolio = {
   headline: "YoaUuki’s Illustration Collection",
   intro:
     "以植物、梦境与城市碎片为线索，记录那些介于真实与虚构之间的瞬间。",
-  aboutTitle: "我把稍纵即逝的感受，变成可以停留的图像。",
+  aboutTitle: "我們的人生只是一个无可挽回的消逝过程的印象和反映",
+  aboutTitleEn: "Our lives reflect an irreversible process of vanishing.",
   about: [
-    "这是一段可替换的艺术家简介。你可以在这里介绍自己的创作媒介、长期关注的主题，以及作品希望与观众建立怎样的联系。",
-    "我的创作从日常观察出发，在柔软的色彩、植物形态与叙事碎片之间，寻找一种既安静又充满生命力的视觉语言。",
+    "YoaUuki 的創作長期聚焦於復古與懷舊的視覺語境，將記憶、時間與身體感知作為持續探索的核心命題。她相信，人生並非由宏大的事件構成，而是由無數細微、易逝的瞬間累積而成；那些難以言說的情緒、日常生活中稍縱即逝的感受，以及被時間反覆沖淡的記憶，共同構成了生命存在的印象與反映。",
+    "她的插畫經常關注那些容易被忽略的微小情緒：沉默、遲疑、依戀、失落、平靜，或某種無法準確命名的感受。植物則成為她創作中重要的象徵語言，既是生命循環的隱喻，也是身體感知的延伸。葉片、根系、花朵與枝蔓被抽象化為情緒與身體的載體，使內在經驗得以轉化為可視的圖像。",
+    "YoaUuki 同時使用數位媒介與紙本媒介進行創作，並依據不同主題選擇相應的技術語言。她的作品可能呈現截然不同的視覺風格：有時保留紙張、顏料與筆觸帶來的溫度，有時則透過數位繪畫建立更自由的敘事與色彩結構。然而，媒介與形式的變化並未改變她始終如一的創作核心——以圖像保存那些正在流逝、卻仍然留存在感知中的情緒與記憶。",
+    "對 YoaUuki 而言，創作並非試圖對抗時間，而是在不可逆的消逝之中，為生命留下短暫卻真實的印記。每一幅作品都是一段記憶的殘響、一種情緒的留存，也是對「我們的人生只是一个无可挽回的消逝过程的印象和反映」這一命題持續而溫柔的回應。",
+  ],
+  aboutEn: [
+    "YoaUuki’s practice has long been rooted in the visual language of the vintage and the nostalgic, with memory, time and embodied perception forming the central concerns of her ongoing exploration. She believes that life is not composed of grand events, but accumulated through countless subtle and fleeting moments. Emotions that resist language, sensations that vanish in the course of everyday life, and memories repeatedly softened by time together form the impressions and reflections of our existence.",
+    "Her illustrations often attend to small emotions that are easily overlooked: silence, hesitation, attachment, loss, calm, or a feeling that cannot be precisely named. Plants serve as an important symbolic language in her work—both metaphors for the cycles of life and extensions of bodily perception. Leaves, roots, flowers and vines are abstracted into vessels for emotion and the body, allowing inner experience to take visible form.",
+    "YoaUuki works across both digital and paper-based media, choosing a technical language in response to each subject. Her works may take on distinctly different visual styles: at times retaining the warmth of paper, pigment and the artist’s hand; at others using digital painting to construct freer structures of narrative and colour. Yet these shifts in medium and form never alter the core of her practice—to preserve in images the emotions and memories that are passing away while remaining present in perception.",
+    "For YoaUuki, making art is not an attempt to resist time. It is a way of leaving a brief yet truthful trace of life within an irreversible process of disappearance. Each work is the afterimage of a memory, the preservation of an emotion, and a continuing, gentle response to the proposition that “our lives are merely impressions and reflections of an irreversible process of vanishing.”",
   ],
   facts: [
     { label: "BASED IN", value: "CHINA" },
