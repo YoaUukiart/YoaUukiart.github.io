@@ -1128,15 +1128,6 @@ a {
   white-space: nowrap;
 }
 
-.contact-section > a span {
-  transition: transform 180ms ease;
-}
-
-.contact-section > a:hover span,
-.contact-section > a:focus-visible span {
-  transform: translate(5px, -5px);
-}
-
 .site-footer {
   min-height: 110px;
   display: grid;
