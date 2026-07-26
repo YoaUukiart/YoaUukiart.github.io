@@ -590,8 +590,102 @@ export const transientSpaceProject = {
   works: transientSpaceWorks,
 } as const;
 
+export const stemWorks: PortfolioWork[] = [
+  {
+    slug: "stem-01",
+    title: "stem 01",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "Layered blue and green botanical spaces crossed by a large leaf and white flowers",
+    image: "/works/stem-01.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "stem-02",
+    title: "stem 02",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A blue-green interior with arching stems, white flowers and translucent geometric rooms",
+    image: "/works/stem-02.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "stem-03",
+    title: "stem 03",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A luminous white organic form suspended in a green and pink landscape of looping lines",
+    image: "/works/stem-03.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "stem-04",
+    title: "stem 04",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A framed night landscape surrounded by green foliage and rows of walking red shoes",
+    image: "/works/stem-04.jpg",
+    artClass: "night",
+    featured: true,
+  },
+  {
+    slug: "stem-05",
+    title: "stem 05",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A solitary figure inside a coral room floating in a deep blue dream landscape",
+    image: "/works/stem-05.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "stem-06",
+    title: "stem 06",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "Soft violet flowers and branching white lines glowing against a deep green-blue square",
+    image: "/works/stem-06.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "stem-07",
+    title: "stem 07",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A translucent figure and tiled panels hovering above a pale architectural garden",
+    image: "/works/stem-07.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "stem-08",
+    title: "stem 08",
+    year: "2025",
+    medium: "WATERCOLOR ON PAPER",
+    alt: "A pink and green interior with a tree, windows, a chair and bright star-shaped details",
+    image: "/works/stem-08.jpg",
+    artClass: "night",
+    featured: true,
+  },
+];
+
+export const stemProject = {
+  slug: "stem",
+  title: "stem",
+  year: "2025",
+  medium: "Watercolor on paper",
+  description:
+    "A series of eight watercolours on paper in which botanical stems, imagined rooms and translucent landscapes overlap. Layered washes of blue, green and pink turn enclosed spaces into shifting gardens of memory and perception.",
+  works: stemWorks,
+} as const;
+
 export const projects = [
   throughMyBloodProject,
   addictedRedProject,
   transientSpaceProject,
+  stemProject,
 ] as const;
