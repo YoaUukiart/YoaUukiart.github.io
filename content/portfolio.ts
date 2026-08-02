@@ -796,10 +796,74 @@ export const moonInTheWaterProject = {
   works: moonInTheWaterWorks,
 } as const;
 
+export const untitledPencilWorks: PortfolioWork[] = [
+  {
+    slug: "untitled-pencil-01",
+    title: "untitled 01",
+    year: "2023",
+    medium: "PENCIL ON PAPER",
+    alt: "A pencil portrait of a figure holding their hands together among large lilies",
+    image: "/works/untitled-pencil-01.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "untitled-pencil-02",
+    title: "untitled 02",
+    year: "2023",
+    medium: "PENCIL ON PAPER",
+    alt: "A pair of legs and dark shoes emerging from a dense bed of tulips",
+    image: "/works/untitled-pencil-02.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "untitled-pencil-03",
+    title: "untitled 03",
+    year: "2023",
+    medium: "PENCIL ON PAPER",
+    alt: "A braided figure seen from behind inside a transparent geometric enclosure filled with leaves",
+    image: "/works/untitled-pencil-03.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "untitled-pencil-04",
+    title: "untitled 04",
+    year: "2023",
+    medium: "PENCIL ON PAPER",
+    alt: "A suspended ruffled skirt rising above a dense arrangement of lilies",
+    image: "/works/untitled-pencil-04.jpg",
+    artClass: "night",
+    featured: true,
+  },
+  {
+    slug: "untitled-pencil-05",
+    title: "untitled 05",
+    year: "2023",
+    medium: "PENCIL ON PAPER",
+    alt: "Three pairs of bent legs arranged among leaves inside a geometric box",
+    image: "/works/untitled-pencil-05.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+];
+
+export const untitledPencilProject = {
+  slug: "untitled-pencil",
+  title: "untitled",
+  year: "2023",
+  medium: "Pencil on paper",
+  description:
+    "A series of five pencil drawings on paper in which figures, flowers and enclosed spaces are woven through delicate graphite lines. Bodies appear, disappear and return as fragments within dense botanical arrangements, holding a quiet tension between intimacy and distance.",
+  works: untitledPencilWorks,
+} as const;
+
 export const projects = [
   throughMyBloodProject,
   addictedRedProject,
   transientSpaceProject,
   stemProject,
   moonInTheWaterProject,
+  untitledPencilProject,
 ] as const;

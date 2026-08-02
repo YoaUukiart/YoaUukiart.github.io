@@ -887,7 +887,7 @@ export function ProjectCarousel({
                   </div>
                   <div>
                     <dt>Series</dt>
-                    <dd>{works.length} digital paintings</dd>
+                    <dd>{works.length} works</dd>
                   </div>
                 </dl>
 
