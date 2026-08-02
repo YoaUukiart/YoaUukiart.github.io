@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import type { PortfolioWork } from "@/content/portfolio";
 
@@ -711,8 +712,11 @@ export function ProjectCarousel({
         </article>
       )}
 
-      {lightboxWork?.image && lightboxIndex !== null ? (
-        <div
+      {typeof document !== "undefined" &&
+      lightboxWork?.image &&
+      lightboxIndex !== null
+        ? createPortal(
+            <div
           className="artwork-lightbox"
           role="dialog"
           aria-modal="true"
@@ -826,11 +830,14 @@ export function ProjectCarousel({
               </div>
             )}
           </div>
-        </div>
-      ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
 
-      {infoOpen ? (
-        <div
+      {typeof document !== "undefined" && infoOpen
+        ? createPortal(
+            <div
           className="project-info"
           role="dialog"
           aria-modal="true"
@@ -891,8 +898,10 @@ export function ProjectCarousel({
               </div>
             </div>
           </article>
-        </div>
-      ) : null}
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
