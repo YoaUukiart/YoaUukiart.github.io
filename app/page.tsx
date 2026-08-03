@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { ProjectCarousel } from "@/components/project-carousel";
 import { SitePanels } from "@/components/site-panels";
 import { portfolio, projects } from "@/content/portfolio";
@@ -8,7 +10,11 @@ export default function Home() {
       <SitePanels
         selected={
           <>
-            <section className="intro-section" aria-labelledby="page-title">
+            <section
+              className="intro-section"
+              aria-labelledby="page-title"
+              data-motion-reveal
+            >
               <p className="intro-section__eyebrow">{portfolio.eyebrow}</p>
               <div className="intro-section__copy">
                 <h1 id="page-title">{portfolio.headline}</h1>
@@ -50,7 +56,7 @@ export default function Home() {
         about={
           <section className="about-section" aria-labelledby="about-title">
             <div className="about-layout">
-              <div className="about-layout__titles">
+              <div className="about-layout__titles" data-motion-reveal>
                 <h2 id="about-title" lang="zh-Hant">
                   {portfolio.aboutTitle}
                 </h2>
@@ -58,14 +64,24 @@ export default function Home() {
               </div>
 
               <div className="about-layout__languages">
-                <article className="about-layout__body" lang="zh-Hant">
+                <article
+                  className="about-layout__body"
+                  lang="zh-Hant"
+                  data-motion-reveal
+                  style={{ "--motion-delay": "55ms" } as CSSProperties}
+                >
                   <p className="about-layout__language">中文 / CHINESE</p>
                   {portfolio.about.map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>
                   ))}
                 </article>
 
-                <article className="about-layout__body" lang="en">
+                <article
+                  className="about-layout__body"
+                  lang="en"
+                  data-motion-reveal
+                  style={{ "--motion-delay": "110ms" } as CSSProperties}
+                >
                   <p className="about-layout__language">ENGLISH</p>
                   {portfolio.aboutEn.map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>
@@ -73,7 +89,12 @@ export default function Home() {
                 </article>
               </div>
 
-              <aside className="about-facts" aria-label="艺术家信息">
+              <aside
+                className="about-facts"
+                aria-label="艺术家信息"
+                data-motion-reveal
+                style={{ "--motion-delay": "110ms" } as CSSProperties}
+              >
                 {portfolio.facts.map((fact) => (
                   <div key={fact.label}>
                     <span>{fact.label}</span>
@@ -85,7 +106,11 @@ export default function Home() {
           </section>
         }
         contact={
-          <section className="contact-section" aria-labelledby="contact-title">
+          <section
+            className="contact-section"
+            aria-labelledby="contact-title"
+            data-motion-reveal
+          >
             <div>
               <p>Contact / Commissions</p>
               <span>{portfolio.year}</span>

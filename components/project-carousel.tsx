@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 import type { PortfolioWork } from "@/content/portfolio";
+import { expressiveEase } from "@/lib/motion";
 
 type ProjectCarouselProps = {
   projectNumber: number;
@@ -249,7 +256,7 @@ export function ProjectCarousel({
       return;
     }
 
-    const duration = 720;
+    const duration = 920;
     const startTime = performance.now();
     track.classList.add("is-animating");
 
@@ -262,10 +269,7 @@ export function ProjectCarousel({
       }
 
       const elapsed = Math.min((currentTime - startTime) / duration, 1);
-      const easedProgress =
-        elapsed < 0.5
-          ? 4 * elapsed * elapsed * elapsed
-          : 1 - Math.pow(-2 * elapsed + 2, 3) / 2;
+      const easedProgress = expressiveEase(elapsed);
 
       animatedTrack.scrollLeft =
         startPosition + distance * easedProgress;
@@ -555,7 +559,15 @@ export function ProjectCarousel({
   return (
     <>
       {variant === "archive" ? (
-        <article className="archive-gallery__project">
+        <article
+          className="archive-gallery__project"
+          data-motion-reveal
+          style={
+            {
+              "--motion-delay": `${Math.min(projectNumber - 1, 4) * 55}ms`,
+            } as CSSProperties
+          }
+        >
           <div
             className="archive-gallery__grid"
             aria-label={`${title}, ${works.length} archived images`}
@@ -595,7 +607,15 @@ export function ProjectCarousel({
           </div>
         </article>
       ) : (
-        <article className="project-carousel">
+        <article
+          className="project-carousel"
+          data-motion-reveal
+          style={
+            {
+              "--motion-delay": `${Math.min(projectNumber - 1, 3) * 55}ms`,
+            } as CSSProperties
+          }
+        >
           <div
             className="project-carousel__viewer"
             role="region"

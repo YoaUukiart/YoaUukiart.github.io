@@ -9,7 +9,9 @@ import {
   useState,
 } from "react";
 
-const PANEL_TRANSITION_MS = 700;
+import { expressiveEase } from "@/lib/motion";
+
+const PANEL_TRANSITION_MS = 980;
 const PAGE_IDS = ["selected", "archive", "about", "contact"] as const;
 const PAGE_LABELS = ["Selected", "Archive", "About", "Contact"] as const;
 
@@ -19,12 +21,6 @@ type SitePanelsProps = {
   about: ReactNode;
   contact: ReactNode;
 };
-
-function easeInOutCubic(progress: number) {
-  return progress < 0.5
-    ? 4 * progress * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-}
 
 export function SitePanels({
   selected,
@@ -103,7 +99,7 @@ export function SitePanels({
 
       const step = (time: number) => {
         const elapsed = Math.min((time - startTime) / PANEL_TRANSITION_MS, 1);
-        track.scrollLeft = start + distance * easeInOutCubic(elapsed);
+        track.scrollLeft = start + distance * expressiveEase(elapsed);
 
         if (elapsed < 1) {
           animationRef.current = requestAnimationFrame(step);
@@ -133,6 +129,41 @@ export function SitePanels({
 
     return () => observer.disconnect();
   }, [updateHeight]);
+
+  useEffect(() => {
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-motion-reveal]"),
+    );
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-revealed"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -7% 0px",
+        threshold: 0.08,
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const initialIndex = PAGE_IDS.findIndex(
