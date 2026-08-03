@@ -1275,6 +1275,59 @@ export const kinderszenenProject = {
   works: kinderszenenWorks,
 } as const;
 
+export const seasonsWorks: PortfolioWork[] = [
+  {
+    slug: "seasons-01",
+    title: "seasons 01",
+    year: "2021",
+    medium: "DIGITAL PAINTING",
+    alt: "A woman in profile is surrounded by flowers woven through sweeping branch-like hair",
+    image: "/works/seasons-01.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "seasons-02",
+    title: "seasons 02",
+    year: "2021",
+    medium: "DIGITAL PAINTING",
+    alt: "A dark-haired woman reclines among wildflowers against a deep green field",
+    image: "/works/seasons-02.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "seasons-03",
+    title: "seasons 03",
+    year: "2021",
+    medium: "DIGITAL PAINTING",
+    alt: "A golden-haired woman closes her eyes as pink blossoms drift across a turquoise sky",
+    image: "/works/seasons-03.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "seasons-04",
+    title: "seasons 04",
+    year: "2021",
+    medium: "DIGITAL PAINTING",
+    alt: "A blue-haired woman rests her hands beside her face while white birds circle overhead",
+    image: "/works/seasons-04.jpg",
+    artClass: "night",
+    featured: true,
+  },
+];
+
+export const seasonsProject = {
+  slug: "seasons",
+  title: "seasons",
+  year: "2021",
+  medium: "Digital painting",
+  description:
+    "A cycle of four digital paintings that follows shifting states of growth, flowering and release. Hair, blossoms and birds merge into seasonal forms, carrying the figures between quiet renewal and transformation.",
+  works: seasonsWorks,
+} as const;
+
 export const projects = [
   throughMyBloodProject,
   addictedRedProject,
@@ -1284,4 +1337,5 @@ export const projects = [
   untitledPencilProject,
   amusingOurselvesToDeathProject,
   kinderszenenProject,
+  seasonsProject,
 ] as const;
