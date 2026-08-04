@@ -1060,6 +1060,26 @@ export const blueUndercurrentWorks: PortfolioWork[] = [
     artClass: "rain",
     featured: true,
   },
+  {
+    slug: "blue-undercurrent-21",
+    title: "蓝色暗流 21",
+    year: "2022",
+    medium: "DIGITAL PAINTING",
+    alt: "A figure in white turns away as pale blue flowers bloom across their back in a dark blue space",
+    image: "/works/blue-undercurrent-21.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "blue-undercurrent-22",
+    title: "蓝色暗流 22",
+    year: "2022",
+    medium: "DIGITAL PAINTING",
+    alt: "A figure in a white shirt is encircled by red thread, orange flames and pale blue water",
+    image: "/works/blue-undercurrent-22.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
 ];
 
 export const blueUndercurrentProject = {
@@ -1068,7 +1088,7 @@ export const blueUndercurrentProject = {
   year: "2022",
   medium: "Digital painting",
   description:
-    "A series of twenty digital paintings moving through blue-toned dreamscapes, bodies, birds, water and celestial symbols. Intimate figures drift between restraint and release as vivid orange light rises beneath the surface.",
+    "A series of twenty-two digital paintings moving through blue-toned dreamscapes, bodies, birds, water and celestial symbols. Intimate figures drift between restraint and release as vivid orange light rises beneath the surface.",
   works: blueUndercurrentWorks,
 } as const;
 
