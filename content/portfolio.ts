@@ -12,7 +12,7 @@ export const portfolio = {
   intro:
     "以植物、梦境与城市碎片为线索，记录那些介于真实与虚构之间的瞬间。",
   aboutTitle: "我們的人生只是一个无可挽回的消逝过程的印象和反映",
-  aboutTitleEn: "Our lives reflect an irreversible process of vanishing.",
+  aboutTitleEn: "Our Lives Reflect an Irreversible Process of Vanishing.",
   about: [
     "YoaUuki 的創作長期聚焦於復古與懷舊的視覺語境，將記憶、時間與身體感知作為持續探索的核心命題。她相信，人生並非由宏大的事件構成，而是由無數細微、易逝的瞬間累積而成；那些難以言說的情緒、日常生活中稍縱即逝的感受，以及被時間反覆沖淡的記憶，共同構成了生命存在的印象與反映。",
     "她的插畫經常關注那些容易被忽略的微小情緒：沉默、遲疑、依戀、失落、平靜，或某種無法準確命名的感受。植物則成為她創作中重要的象徵語言，既是生命循環的隱喻，也是身體感知的延伸。葉片、根系、花朵與枝蔓被抽象化為情緒與身體的載體，使內在經驗得以轉化為可視的圖像。",
@@ -166,7 +166,7 @@ export const works: PortfolioWork[] = [
 
 export const throughMyBloodProject = {
   slug: "through-my-blood",
-  title: "Through my blood",
+  title: "Through My Blood",
   year: "2026",
   medium: "Digital",
   description:
@@ -279,7 +279,7 @@ export const addictedRedWorks: PortfolioWork[] = [
 
 export const addictedRedProject = {
   slug: "addicted-red",
-  title: "Addicted red",
+  title: "Addicted Red",
   year: "2026",
   medium: "Digital painting",
   description:
@@ -582,7 +582,7 @@ export const transientSpaceWorks: PortfolioWork[] = [
 
 export const transientSpaceProject = {
   slug: "transient-space",
-  title: "Transient space",
+  title: "Transient Space",
   year: "2024-2025",
   medium: "Watercolor on paper",
   description:
@@ -675,7 +675,7 @@ export const stemWorks: PortfolioWork[] = [
 
 export const stemProject = {
   slug: "stem",
-  title: "stem",
+  title: "Stem",
   year: "2025",
   medium: "Watercolor on paper",
   description:
@@ -788,7 +788,7 @@ export const moonInTheWaterWorks: PortfolioWork[] = [
 
 export const moonInTheWaterProject = {
   slug: "moon-in-the-water",
-  title: "Moon in the water",
+  title: "Moon in the Water",
   year: "2023",
   medium: "Digital painting",
   description:
@@ -851,7 +851,7 @@ export const untitledPencilWorks: PortfolioWork[] = [
 
 export const untitledPencilProject = {
   slug: "untitled-pencil",
-  title: "untitled",
+  title: "Untitled",
   year: "2023",
   medium: "Pencil on paper",
   description:
@@ -1054,7 +1054,7 @@ export const amusingOurselvesToDeathWorks: PortfolioWork[] = [
 
 export const amusingOurselvesToDeathProject = {
   slug: "amusing-ourselves-to-death",
-  title: "amusing ourselves to death",
+  title: "Amusing Ourselves to Death",
   year: "2021",
   medium: "Digital painting",
   description:
@@ -1320,7 +1320,7 @@ export const seasonsWorks: PortfolioWork[] = [
 
 export const seasonsProject = {
   slug: "seasons",
-  title: "seasons",
+  title: "Seasons",
   year: "2021",
   medium: "Digital painting",
   description:
