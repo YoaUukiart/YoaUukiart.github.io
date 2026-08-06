@@ -48,6 +48,99 @@ export type PortfolioWork = {
   featured?: boolean;
 };
 
+export const vesselWorks: PortfolioWork[] = [
+  {
+    slug: "vessel-01",
+    title: "Vessel 01",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Figures in red shoes standing among flowering vines above a mirrored surface",
+    image: "/works/vessel-01.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "vessel-02",
+    title: "Vessel 02",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Close portrait of a figure with flowers growing through the mouth and teeth",
+    image: "/works/vessel-02.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "vessel-03",
+    title: "Vessel 03",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Figure in a red dress bending inside a miniature pink house",
+    image: "/works/vessel-03.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+  {
+    slug: "vessel-04",
+    title: "Vessel 04",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Portrait framed by stars, lilies and winding green stems",
+    image: "/works/vessel-04.jpg",
+    artClass: "afternoon",
+    featured: true,
+  },
+  {
+    slug: "vessel-05",
+    title: "Vessel 05",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Reclining figure in a pink dress held by green vines above a painted landscape",
+    image: "/works/vessel-05.jpg",
+    artClass: "night",
+    featured: true,
+  },
+  {
+    slug: "vessel-06",
+    title: "Vessel 06",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Portrait with scissors cutting flowers that grow across one eye",
+    image: "/works/vessel-06.jpg",
+    artClass: "rain",
+    featured: true,
+  },
+  {
+    slug: "vessel-07",
+    title: "Vessel 07",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Two figures meeting across a bright pink star in an oval blue field",
+    image: "/works/vessel-07.jpg",
+    artClass: "night",
+    featured: true,
+  },
+  {
+    slug: "vessel-08",
+    title: "Vessel 08",
+    year: "2026",
+    medium: "DIGITAL PAINTING",
+    alt: "Close portrait with dark eyes and a white flower extending toward the ear",
+    image: "/works/vessel-08.jpg",
+    artClass: "geometry",
+    featured: true,
+  },
+];
+
+export const vesselProject = {
+  slug: "vessel",
+  title: "Vessel",
+  year: "2026",
+  medium: "Digital Painting",
+  description:
+    "Eight digital paintings exploring the body as a vessel for growth, appetite, memory and transformation through vivid fields of pink, green and red.",
+  works: vesselWorks,
+} as const;
+
 /**
  * image 留空时显示带 PLACEHOLDER 标记的示例画面。
  * 上传真实作品后填写类似：image: "/works/my-artwork.jpg"
@@ -1562,6 +1655,7 @@ export const seasonsProject = {
 } as const;
 
 export const projects = [
+  vesselProject,
   throughMyBloodProject,
   addictedRedProject,
   transientSpaceProject,
