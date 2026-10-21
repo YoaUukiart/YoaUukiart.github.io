@@ -9,7 +9,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { ArtworkImage } from "@/components/artwork-image";
 import type { PortfolioWork } from "@/content/portfolio";
+import { artworkDownloadPath } from "@/lib/artwork-download";
 import { expressiveEase } from "@/lib/motion";
 
 type ProjectCarouselProps = {
@@ -583,10 +585,8 @@ export function ProjectCarousel({
                 <div className="archive-thumbnail__image">
                   {work.image ? (
                     <>
-                      {/* Original artwork files are shown without recompression. */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`${basePath}${work.image}`}
+                      <ArtworkImage
+                        image={work.image}
                         alt={work.alt}
                         loading="lazy"
                         draggable={false}
@@ -647,10 +647,8 @@ export function ProjectCarousel({
                   >
                     {work.image ? (
                       <>
-                        {/* Original artwork files are shown without recompression. */}
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={`${basePath}${work.image}`}
+                        <ArtworkImage
+                          image={work.image}
                           alt={work.alt}
                           loading={index === 0 ? "eager" : "lazy"}
                           draggable={false}
@@ -782,6 +780,17 @@ export function ProjectCarousel({
             </div>
 
             <div className="artwork-lightbox__identity">
+              <a
+                className="artwork-lightbox__download"
+                href={`${basePath}${artworkDownloadPath(lightboxWork.image)}`}
+                download={`yoauuki-${lightboxWork.slug}${lightboxWork.image.slice(lightboxWork.image.lastIndexOf("."))}`}
+                aria-label="Download image with yoauuki watermark"
+                title="下载带水印图片 / Download with watermark"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                  <path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
+                </svg>
+              </a>
               {variant !== "archive" ? <strong>{title}</strong> : null}
               <span>
                 {(lightboxIndex + 1).toString().padStart(2, "0")} /{" "}
@@ -818,10 +827,8 @@ export function ProjectCarousel({
                       className="artwork-lightbox__transition-slide"
                       key={`${work.slug}-${index}`}
                     >
-                      {/* Original artwork files are shown without recompression. */}
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`${basePath}${work.image}`}
+                      <ArtworkImage
+                        image={work.image}
                         alt=""
                         draggable={false}
                         onClick={handleLightboxImageClick}
@@ -838,10 +845,8 @@ export function ProjectCarousel({
                   height: `${zoom * 100}%`,
                 }}
               >
-                {/* Original artwork files are shown without recompression. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`${basePath}${lightboxWork.image}`}
+                <ArtworkImage
+                  image={lightboxWork.image}
                   alt={lightboxWork.alt}
                   draggable={false}
                   title="Click to return · Swipe to change · Pinch to zoom"
@@ -883,10 +888,8 @@ export function ProjectCarousel({
 
             <div className="project-info__layout">
               <div className="project-info__image">
-                {/* Original artwork files are shown without recompression. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`${basePath}${works[0]?.image ?? ""}`}
+                <ArtworkImage
+                  image={works[0]?.image ?? ""}
                   alt=""
                   draggable={false}
                 />

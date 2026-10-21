@@ -6,8 +6,12 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "images:downloads": "node scripts/generate-download-images.mjs",
+    "predev": "npm run images:downloads",
     "dev": "vinext dev",
+    "prebuild": "npm run images:downloads",
     "build": "vinext build",
+    "prebuild:pages": "npm run images:downloads",
     "build:pages": "next build",
     "start": "vinext start",
     "test": "npm run build",
@@ -16,7 +20,8 @@
   "dependencies": {
     "next": "16.2.6",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "sharp": "0.34.5"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
